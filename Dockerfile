@@ -60,7 +60,7 @@ RUN yarn global add pm2
 
 #  .babelrc.js
 COPY package.json yarn.lock tsconfig.back.json .eslint* webpack.config.js tsconfig.json /usr/workspace/
-# COPY back/keys /usr/workspace/back/keys
+COPY cert/keys /usr/workspace/cert/keys
 # COPY webpack /usr/workspace/webpack
 
 # ADD /Users/pouya/Library/Caches/Yarn/v2/ /usr/yarn-cache
