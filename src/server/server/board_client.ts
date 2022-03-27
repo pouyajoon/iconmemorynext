@@ -2,13 +2,12 @@
 /**
  *
  * @param board
- * @param posX
- * @param posY
+ * @param pos
  * @returns The board item at (x, y)
  */
-function getItem(board: IBoard, posX: number, posY: number): IBoardItem {
-    if (posX >= board.width || posY >= board.height || posX < 0 || posY < 0) {
-        throw new Error(`Out of bounds: position (${posX}, ${posY}) doesn't exist on this board`);
+function getItem(board: IBoard, pos: IPosition): IBoardItem {
+    if (pos.x >= board.width || pos.y >= board.height || pos.x < 0 || pos.y < 0) {
+        throw new Error(`Out of bounds: position (${pos.x}, ${pos.y}) doesn't exist on this board`);
     }
-    return board.items[posY * board.width + posX];
+    return board.items[pos.y * board.width + pos.x];
 }
