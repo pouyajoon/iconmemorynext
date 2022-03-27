@@ -2,7 +2,6 @@ interface IBoard {
     width: number;
     height: number;
     items: IBoardItem[];
-    getItem(x: number, y: number): IBoardItem;
 }
 
 interface IBoardItem {
@@ -13,8 +12,23 @@ interface IBoardItem {
 
 interface IRoom {
     players: IRoomPlayer[];
+    board: IBoard;
 }
 
 interface IRoomPlayer {
     name: string;
+}
+
+interface IRoomManager {
+    rooms: IRoom[];
+}
+
+interface ISize {
+    width: number;
+    height: number;
+}
+
+interface IPosition {
+    x: number;
+    y: number;
 }
