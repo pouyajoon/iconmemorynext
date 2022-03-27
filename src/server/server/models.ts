@@ -10,3 +10,11 @@ interface IBoardItem {
     posY: number;
     icon: string;
 }
+
+interface IRoom {
+    players: IRoomPlayer[];
+}
+
+interface IRoomPlayer {
+    name: string;
+}
