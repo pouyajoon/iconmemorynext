@@ -33,7 +33,9 @@ const express_1 = __importDefault(require("express"));
 const express_sslify_1 = __importDefault(require("express-sslify"));
 const fs_1 = require("fs");
 const spdy = __importStar(require("spdy"));
-const frontDistDir = '';
+// import * as core from "express-serve-static-core";
+const path_1 = require("path");
+const frontDistDir = (0, path_1.resolve)(__dirname, '/dist/front/');
 function getServer(app) {
     const key = (0, fs_1.readFileSync)(`./cert/keys/server.key`, 'utf8');
     const cert = (0, fs_1.readFileSync)(`./cert/keys/server.crt`, 'utf8');
@@ -43,17 +45,20 @@ function getServer(app) {
 function expressServer() {
     const app = (0, express_1.default)();
     app.use((0, cors_1.default)());
-    // app.use(express.static(frontDistDir));
-    // app.use(express.urlencoded({ limit: '5mb', extended: true }));
-    // app.use(express.json({ limit: '5mb' }));
-    // app.use(compression({ level: 1 }));
+    app.use(express_1.default.static('dist/front'));
+    app.use(express_1.default.urlencoded({ limit: '5mb', extended: true }));
+    app.use(express_1.default.json({ limit: '5mb' }));
     app.use(express_sslify_1.default.HTTPS({ trustProtoHeader: true }));
     const port = process.env.PORT || 443;
     console.log("SETUP SERVER ON".blue, port, process.env.NODE_ENV, process.env.JUP_ENV);
     const server = getServer(app);
-    app.get('/', (req, res) => {
-        res.send({ ok: true });
+    app.get('*', function (req, res) {
+        const r = (0, path_1.resolve)((0, path_1.join)(frontDistDir, 'index.html'));
+        res.sendFile(r);
     });
+    // app.get('/', (req, res) => {
+    //     res.send({ ok: true });
+    // })
     server.listen(port, () => console.debug(`🚀 icon memory ready with https on port ${port}!`.green));
     return { server, app };
     // const server = getServer(app);
