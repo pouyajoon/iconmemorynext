@@ -35,7 +35,7 @@ module.exports = {
     },
     // stats: "detailed",
     // mode: "development",
-    entry: './src/front/index.ts',
+    entry: './src/front/index.tsx',
     performance: {
         maxAssetSize: 90 * 2 * 512000,
         maxEntrypointSize: 90 * 2 * 512000,
