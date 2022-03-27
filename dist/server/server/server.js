@@ -52,7 +52,7 @@ function expressServer() {
     console.log("SETUP SERVER ON".blue, port, process.env.NODE_ENV, process.env.JUP_ENV);
     const server = getServer(app);
     app.get('/', (req, res) => {
-        res.send({ ok: true });
+        res.send({ jeanlouis: true });
     });
     server.listen(port, () => console.debug(`🚀 icon memory ready with https on port ${port}!`.green));
     return { server, app };

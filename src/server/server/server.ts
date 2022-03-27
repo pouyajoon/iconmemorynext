@@ -28,7 +28,7 @@ export function expressServer() {
     const server = getServer(app);
 
     app.get('/', (req, res) => {
-        res.send({ ok: true });
+        res.send({ jeanlouis: true });
     })
 
     server.listen(port, () => console.debug(`🚀 icon memory ready with https on port ${port}!`.green));
