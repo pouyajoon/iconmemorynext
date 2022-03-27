@@ -12,8 +12,8 @@ yarn back:start
 
 
 
-- (REQUIRED) automatic deployment
-- (REQUIRED) hosting
+00:34 (REQUIRED) automatic deployment
+00:34 (REQUIRED) hosting
 - home page
 - create a room button
 - shareable link
