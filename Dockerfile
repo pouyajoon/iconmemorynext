@@ -95,7 +95,7 @@ RUN rm -rf src && \
 EXPOSE 443 443
 ENV JUP_ENV=docker
 # CMD ["node", "dist/back/server.js" ]
-CMD ["pm2-runtime","start", "dist/server/index.js", "-i", "1" ]
+CMD ["pm2-runtime","start", "dist/server/server/index.js", "-i", "1" ]
 
 
 
