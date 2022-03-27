@@ -47,7 +47,7 @@ FROM node:16-alpine
 #     NODE_ENV=production \
 #     NODE_OPTIONS="--max-old-space-size=4096"
 
-RUN yarn global add pm2
+# RUN yarn global add pm2
 
 # RUN apt-get update
 # RUN apt-get -yq install xfonts-utils
@@ -92,10 +92,10 @@ RUN rm -rf src && \
 # COPY manifests /usr/workspace/manifests
 
 # ENV PORT 8080
-EXPOSE 443 443
-ENV JUP_ENV=docker
+# EXPOSE 443 443
+# ENV JUP_ENV=docker
 # CMD ["node", "dist/back/server.js" ]
-CMD ["pm2-runtime","start", "dist/server/server/index.js", "-i", "1" ]
+# CMD ["pm2-runtime","start", "dist/server/server/index.js", "-i", "1" ]
 
 
 
