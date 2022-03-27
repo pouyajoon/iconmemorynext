@@ -3,7 +3,17 @@
   "version": "1.0.0",
   "main": "index.js",
   "repository": "git@github.com:pouyajoon/iconmemorynext.git",
-  "author": "<pouyajoon@gmail.com>",
+  "author": "<pouyajoon@gmail.com>,",
+  "contributors": [
+    {
+      "email": "pouyajoon@gmail.com",
+      "name": ""
+    },
+    {
+      "email": "aurelien.gasser@gmail.com",
+      "name": ""
+    }
+  ],
   "license": "MIT",
   "scripts": {
     "back:dev": "./node_modules/.bin/tsc -p tsconfig.back.json --watch ",
