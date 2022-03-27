@@ -22,17 +22,13 @@ yarn back:start
 - game
 - leaderboard local
 - leaderboard global
-
 - choose css framework
 - repo readme / description / tags
+- change from polling to websocket
 - minifying
-
 - automatic ping
-
 - share leaderboard
-
-- chat
-
+- db persistente
 - social media
-
+- chat
 
