@@ -59,7 +59,7 @@ RUN yarn global add pm2
 #     npm config set "//npm.fontawesome.com/:_authToken" 7640C723-2A32-40B6-999A-AC77A83201D8
 
 #  .babelrc.js
-COPY package.json yarn.lock tsconfig.back.json .eslint* webpack.config.js /usr/workspace/
+COPY package.json yarn.lock tsconfig.back.json .eslint* webpack.config.js tsconfig.json /usr/workspace/
 # COPY back/keys /usr/workspace/back/keys
 # COPY webpack /usr/workspace/webpack
 
