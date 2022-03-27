@@ -1,0 +1,17 @@
+{
+  "name": "iconmemorynext",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:pouyajoon/iconmemorynext.git",
+  "author": "<pouyajoon@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "back:dev": "./node_modules/.bin/tsc -p tsconfig.back.json --watch ",
+    "back:start": "JUP_ENV=development JUP_SSR=true ./node_modules/.bin/nodemon dist/server/index.js --delay 2"
+  },
+  "dependencies": {
+    "@types/node": "^17.0.23",
+    "nodemon": "^2.0.15",
+    "typescript": "^4.6.3"
+  }
+}
