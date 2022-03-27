@@ -8,8 +8,18 @@ export function Application() {
         <BrowserRouter>
             <Routes>
                 <Route path="/" element={<Home />} />
+                <Route path="/a" element={<A />} />
                 <Route path="/rooms/:id" element={<Room />} />
+                <Route path="*" element={<Misc />} />
             </Routes>
         </BrowserRouter>
     </div>
+}
+
+function A() {
+    return 'AA';
+}
+
+function Misc() {
+    return 'Misc';
 }
