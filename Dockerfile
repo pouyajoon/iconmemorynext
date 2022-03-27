@@ -83,7 +83,7 @@ COPY src /usr/workspace/src
 # RUN yarn apidocs:bundle
 # RUN ls -LR /usr/bin/pw-browsers > a.md
 RUN yarn back:production
-# RUN yarn front:production
+RUN yarn front:production
 
 RUN rm -rf src && \
     rm -rf webpack \
