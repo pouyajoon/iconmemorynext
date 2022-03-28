@@ -11,7 +11,8 @@ function createBoard(size: ISize): IBoard {
     return {
         width: size.width,
         height: size.height,
-        items: createBoardItems(size)
+        // items: createBoardItems(size)
+        items: []
     }
 }
 
@@ -49,7 +50,7 @@ export function createRoom(manager: IRoomManager): IRoom {
     const board = createBoard({ width: DEFAULT_MAP_WIDTH, height: DEFAULT_MAP_HEIGHT });
     console.log(board);
     const room = {
-        id: Math.random().toFixed(0),
+        id: (Math.random() * 1e16).toFixed(0),
         players: [],
         board: board
     };
