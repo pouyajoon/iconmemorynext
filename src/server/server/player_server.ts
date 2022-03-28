@@ -6,12 +6,14 @@ export function createPlayer(id: string | null, name: string): IRoomPlayer {
     if (id === null || !v.default.isUUID(id)) {
         return {
             name: name,
-            id: uuidv4()
+            id: uuidv4(),
+            score: 0
         };
     }
     return {
         name: name,
-        id: id
+        id: id,
+        score: 0 // todo get current score
     };
 }
 
@@ -21,6 +23,7 @@ export function getPlayer(id: string, name: string): IRoomPlayer {
     }
     return {
         name: name,
-        id: id
+        id: id,
+        score: 0 // todo get current score
     };
 }

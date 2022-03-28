@@ -1,5 +1,5 @@
 import { getBoardItem } from "./board";
-import { EVENT_TYPE_FIRST_ITEM_FLIPPED, EVENT_TYPE_SECOND_ITEM_FLIPPED, IBoardItemFlippedEvent, IRoomManager } from "./models";
+import { EVENT_TYPE_FIRST_ITEM_FLIPPED, EVENT_TYPE_SECOND_ITEM_FLIPPED, IBoard, IBoardItemFlippedEvent, IRoomManager } from "./models";
 
 export function flipIcon(
     manager: IRoomManager,
@@ -13,8 +13,7 @@ export function flipIcon(
     if (!room) {
         throw new Error(`Room ${roomId} not found`);
     }
-    const player = room.players.find(p => p.id === playerId);
-    if (!player) {
+    if (room.players.get(playerId) === undefined) {
         throw new Error(`Player ${playerId} not found`);
     }
     const board = room.board;
@@ -64,4 +63,9 @@ export function flipIcon(
     }
 
     return event;
+}
+
+
+function foundPair(board: IBoard, event: IBoardItemFlippedEvent) {
+    event.playerId
 }

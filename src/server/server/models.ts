@@ -15,13 +15,14 @@ export interface IBoardItem {
 
 export interface IRoom {
     id: string;
-    players: IRoomPlayer[];
+    players: Map<string, IRoomPlayer>;
     board: IBoard;
 }
 
 export interface IRoomPlayer {
     id: string;
     name: string;
+    score: number;
 }
 
 export interface IRoomManager {

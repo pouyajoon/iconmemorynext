@@ -51,7 +51,7 @@ export function createRoom(manager: IRoomManager): IRoom {
     const board = createBoard({ width: DEFAULT_MAP_WIDTH, height: DEFAULT_MAP_HEIGHT });
     const room = {
         id: uuidv4(),
-        players: [],
+        players: new Map<string, IRoomPlayer>(),
         board: board
     };
     addRoom(manager, room)
@@ -59,7 +59,7 @@ export function createRoom(manager: IRoomManager): IRoom {
 }
 
 export function joinRoom(player: IRoomPlayer, room: IRoom): void {
-    room.players.push(player);
+    room.players.set(player.id, player);
 }
 
 function addRoom(manager: IRoomManager, room: IRoom): void {
