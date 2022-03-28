@@ -16,6 +16,8 @@ yarn back:start
 00:34 hosting
 00:34 yarn, express
 02:02 webpack
+02:02 docker
+02:02 react
 02:02 rooms, players and boards logic
 02:02 first route handlers
 - change from polling to websocket
