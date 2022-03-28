@@ -6,7 +6,7 @@ export function flipIcon(
     manager: IRoomManager,
     flipIcon: IFlipIcon)
     : IBoardItemFlippedEvent {
-    const { roomId, playerId, itemId, firstFlip } = flipIcon;
+    const { roomId, playerId, itemId: index, firstFlip } = flipIcon;
 
     const room = manager.rooms.find(r => r.id === roomId);
     if (!room) {
@@ -17,7 +17,7 @@ export function flipIcon(
         throw new Error(`Player ${playerId} not found`);
     }
     const board = room.board;
-    const item = getBoardItem(board, itemId);
+    const item = getBoardItem(board, index);
     if (item.event) {
         throw new Error(`You can't flip an already-flipped item`);
     }
@@ -28,8 +28,8 @@ export function flipIcon(
             type: EVENT_TYPE_FIRST_ITEM_FLIPPED,
             playerId: playerId,
             timestamp: Date.now(),
-            position1: pos,
-            position2: undefined,
+            index1: index,
+            index2: undefined,
             isPair: false
         };
         item.event = event;
@@ -40,16 +40,18 @@ export function flipIcon(
         throw new Error(`You can't flip an item with a different player`);
     }
 
-    const firstItem = getBoardItem(board, firstFlip.position1);
-    const secondItem = getBoardItem(board, pos);
+    const firstItem = getBoardItem(board, firstFlip.index1);
+    const secondItem = getBoardItem(board, index);
+    console.log(firstItem)
+    console.log(secondItem)
 
     const event = {
         type: EVENT_TYPE_SECOND_ITEM_FLIPPED,
         playerId: playerId,
         timestamp: Date.now(),
-        position1: firstFlip.position1,
-        position2: pos,
-        isPair: firstItem == secondItem,
+        index1: firstFlip.index1,
+        index2: index,
+        isPair: firstItem.icon == secondItem.icon,
     }
 
     firstItem.event = undefined; // clear event
