@@ -4,11 +4,6 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
     devServer: {
-        // port: 9000,
-        static: {
-            // directory: path.join(__dirname, 'assets'),
-            directory: "/"
-        },
         server: 'https',
         client: {
             logging: 'verbose',
@@ -25,13 +20,7 @@ module.exports = {
             index: "/index.html"
         }, // true for index.html upon 404, object for multiple paths
         hot: true, // hot module replacement. Depends on HotModuleReplacementPlugin
-        // https: true, // true for self-signed, object for cert authority
-        headers: {
-            "Access-Control-Allow-Origin": "*"
-        },
-        // static: {
-        //     directory: "/",
-        // },
+
     },
     // stats: "detailed",
     // mode: "development",
