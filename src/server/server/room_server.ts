@@ -1,5 +1,6 @@
 
 import { v4 as uuidv4 } from 'uuid';
+import { IBoard, IBoardItem, IRoom, IRoomManager, IRoomPlayer, ISize } from './models';
 
 export const DEFAULT_MAP_WIDTH = 3
 export const DEFAULT_MAP_HEIGHT = 4;
@@ -26,7 +27,8 @@ function createBoardItems(size: ISize): IBoardItem[] {
             items.push({
                 index: x * size.width + y,
                 position: { x, y },
-                icon: 'unassigned'
+                icon: 'unassigned',
+                event: undefined
             });
         }
     }

@@ -1,3 +1,4 @@
+import { IBoard, IBoardItem, IPosition } from "./models";
 
 /**
  *

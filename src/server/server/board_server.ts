@@ -1,12 +1,13 @@
 import { getBoardItem } from "./board";
+import { EVENT_TYPE_FIRST_ITEM_FLIPPED, EVENT_TYPE_SECOND_ITEM_FLIPPED, IBoardItemFlippedEvent, IPosition, IRoomManager } from "./models";
 
 export function flipIcon(
     manager: IRoomManager,
     roomId: string,
     playerId: string,
     pos: IPosition,
-    firstFlip?: IBoardFirstItemFlippedEvent)
-: IBoardFirstItemFlippedEvent | IBoardSecondItemFlippedEvent {
+    firstFlip?: IBoardItemFlippedEvent)
+: IBoardItemFlippedEvent {
 
     const room = manager.rooms.find(r => r.id === roomId);
     if (!room) {
@@ -21,7 +22,7 @@ export function flipIcon(
     console.log("yay")
     console.log(item)
     console.log(item.event)
-    if (item.event !== null) {
+    if (item.event) {
         throw new Error(`You can't flip an already-flipped item`);
     }
     if (!firstFlip) {
@@ -31,7 +32,9 @@ export function flipIcon(
             type: EVENT_TYPE_FIRST_ITEM_FLIPPED,
             playerId: playerId,
             timestamp: Date.now(),
-            position: pos,
+            position1: pos,
+            position2: undefined,
+            isPair: false
         };
     }
 
@@ -39,14 +42,14 @@ export function flipIcon(
         throw new Error(`You can't flip an item with a different player`);
     }
 
-    const firstItem = getBoardItem(board, firstFlip.position);
+    const firstItem = getBoardItem(board, firstFlip.position1);
     const secondItem = getBoardItem(board, pos);
 
     const event = {
         type: EVENT_TYPE_SECOND_ITEM_FLIPPED,
         playerId: playerId,
         timestamp: Date.now(),
-        position1: firstFlip.position,
+        position1: firstFlip.position1,
         position2: pos,
         isPair: firstItem == secondItem,
     }
