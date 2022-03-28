@@ -5,6 +5,7 @@ import { createPlayer, getPlayer } from "./player_server";
 import { createRoom, createRoomManager, DEFAULT_MAP_HEIGHT, DEFAULT_MAP_WIDTH, getRoom, joinRoom } from "./room_server";
 import { flipIcon } from "./board_server";
 import { EVENT_TYPE_FIRST_ITEM_FLIPPED, EVENT_TYPE_SECOND_ITEM_FLIPPED } from "./models";
+import { getBoardItem } from "./board";
 
 
 describe("board", () => {
@@ -59,6 +60,8 @@ describe("board", () => {
         expect(first.position1.y).toBe(0)
         expect(first.type).toBe(EVENT_TYPE_FIRST_ITEM_FLIPPED)
 
+        expect(getBoardItem(room.board, first.position1).event).toBe(first)  // event should be set
+
         const second = flipIcon(manager, room.id, player.id, { x: 0, y: 1}, first);
         expect(second.playerId).toBe(player.id)
         expect(second.isPair).toBe(false)
@@ -70,5 +73,6 @@ describe("board", () => {
             expect(second.position2.y).toBe(1)
         }
         expect(second.type).toBe(EVENT_TYPE_SECOND_ITEM_FLIPPED)
+        expect(getBoardItem(room.board, first.position1).event).toBe(undefined) // event should be cleared
     });
 });

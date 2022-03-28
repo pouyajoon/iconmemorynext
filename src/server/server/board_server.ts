@@ -19,16 +19,13 @@ export function flipIcon(
     }
     const board = room.board;
     const item = getBoardItem(board, pos);
-    console.log("yay")
-    console.log(item)
-    console.log(item.event)
     if (item.event) {
         throw new Error(`You can't flip an already-flipped item`);
     }
+
     if (!firstFlip) {
         // first flip
-        item.event = firstFlip;
-        return {
+        const event = {
             type: EVENT_TYPE_FIRST_ITEM_FLIPPED,
             playerId: playerId,
             timestamp: Date.now(),
@@ -36,6 +33,8 @@ export function flipIcon(
             position2: undefined,
             isPair: false
         };
+        item.event = event;
+        return event;
     }
 
     if (firstFlip.playerId !== playerId) {
@@ -54,8 +53,7 @@ export function flipIcon(
         isPair: firstItem == secondItem,
     }
 
-    firstItem.event = event;
-    secondItem.event = event;
+    firstItem.event = undefined; // clear event
 
     return event;
 }
