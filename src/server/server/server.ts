@@ -10,6 +10,7 @@ import { Server as SocketIoServer } from 'socket.io';
 import { createPlayer, getPlayer } from "./player_server";
 import { createRoom, createRoomManager, getRoom, joinRoom } from "./room_server";
 import { Server } from "http";
+import { flipIcon } from "./board_server";
 
 const frontDistDir = 'dist/front';
 
@@ -50,7 +51,10 @@ export function expressServer() {
             const room = manager.rooms.find(r => r.id === id);
             getRoom(room)
         });
-
+        socket.on('/players/add', (id: string, playerName: string, getPlayer: (player: IRoomPlayer) => void) => {
+            const player = createPlayer(id, playerName)
+            getPlayer(player);
+        });
 
         socket.on("disconnect", () => {
             // sockets.delete(socket.id);
@@ -77,14 +81,14 @@ export function expressServer() {
 
 function registerHanders(app: express.Application, manager: IRoomManager) {
 
-    app.get('/rooms', (req, res) => {
-        res.send(manager.rooms);
-    })
+    // app.get('/rooms', (req, res) => {
+    //     res.send(manager.rooms);
+    // })
 
-    app.post('/rooms', (req, res) => {
-        const room = createRoom(manager);
-        return res.send(room);
-    })
+    // app.post('/rooms', (req, res) => {
+    //     const room = createRoom(manager);
+    //     return res.send(room);
+    // })
 
     app.post('/players', (req, res) => {
         const id = req.body.id
@@ -93,14 +97,14 @@ function registerHanders(app: express.Application, manager: IRoomManager) {
         return res.send(player);
     })
 
-    app.get('/rooms/:roomId', (req, res) => {
-        const roomId = req.params["roomId"];
-        const room = res.send(manager.rooms.find(r => r.id === roomId));
-        if (room == null) {
-            return res.status(404).send({ error: "Room not found: " + roomId });
-        }
-        return res.send(room)
-    })
+    // app.get('/rooms/:roomId', (req, res) => {
+    //     const roomId = req.params["roomId"];
+    //     const room = res.send(manager.rooms.find(r => r.id === roomId));
+    //     if (room == null) {
+    //         return res.status(404).send({ error: "Room not found: " + roomId });
+    //     }
+    //     return res.send(room)
+    // })
 
     app.post('rooms/:roomId/players', (req, res) => {
         const playerId = req.body.playerId
