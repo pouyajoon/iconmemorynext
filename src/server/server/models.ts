@@ -9,7 +9,6 @@ export interface IBoard {
 
 export interface IBoardItem {
     index: number;
-    position: IPosition;
     icon: string;
     event?: IBoardItemFlippedEvent;
 }
@@ -34,16 +33,11 @@ export interface ISize {
     height: number;
 }
 
-export interface IPosition {
-    x: number;
-    y: number;
-}
-
 export interface IBoardItemFlippedEvent {
     type: string
     playerId: string
     timestamp: number
-    position1: IPosition
-    position2?: IPosition
+    index1: number
+    index2?: number
     isPair: boolean;
 }
