@@ -52,6 +52,7 @@ function BoardItem(props: { item: IBoardItem }) {
         height: itemWidth * 1.3,
         margin: itemMargin,
         color: color,
+        borderColor: item.playerId ? color : undefined,
     }}
         className={classes}
         onClick={() => {
@@ -70,7 +71,6 @@ function BoardItem(props: { item: IBoardItem }) {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    color,
                     fontSize: '3rem',
                     fontWeight: 'bold',
                     width: itemWidth,
