@@ -13,7 +13,9 @@ export function Rooms() {
     console.log(rooms);
     if (rooms && rooms.length > 0) {
         return <div>
-            {rooms.map((room, i) => <RoomItem key={i} room={room} />)}
+            <ul>
+                {rooms.map((room, i) => <li key={i}><RoomItem room={room} /></li>)}
+            </ul>
             <hr />
             <CreateRoom setRooms={setRooms} />
         </div>

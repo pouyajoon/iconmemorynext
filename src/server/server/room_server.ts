@@ -54,7 +54,6 @@ export function createRoom(manager: IRoomManager): IRoom {
         players: [],
         board: board
     };
-    console.log(room);
     addRoom(manager, room)
     return room;
 }

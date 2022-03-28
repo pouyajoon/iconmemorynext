@@ -46,7 +46,10 @@ export function expressServer() {
         socket.on('/rooms/add', (setRoom: (room: IRoom) => void) => {
             setRoom(createRoom(manager));
         });
-        socket.on('/rooms/get', (id: string, getRoom: (room?: IRoom) => void) => getRoom(manager.rooms.find(r => r.id === id)));
+        socket.on('/rooms/get', (id: string, getRoom: (room?: IRoom) => void) => {
+            const room = manager.rooms.find(r => r.id === id);
+            getRoom(room)
+        });
 
 
         socket.on("disconnect", () => {
