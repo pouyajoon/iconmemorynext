@@ -1,5 +1,11 @@
+
+
 const DEFAULT_MAP_WIDTH = 3
 const DEFAULT_MAP_HEIGHT = 3;
+
+export function createRoomManager(): IRoomManager {
+    return { rooms: [] };
+}
 
 function createBoard(size: ISize): IBoard {
     return {
@@ -39,18 +45,18 @@ function getRandomUnassignedItem(size: ISize, items: IBoardItem[]): IBoardItem {
     }
 }
 
-function createRoom(manager: IRoomManager, player: IRoomPlayer): IRoom {
+export function createRoom(manager: IRoomManager): IRoom {
     const board = createBoard({ width: DEFAULT_MAP_WIDTH, height: DEFAULT_MAP_HEIGHT});
     const room = {
-        players: [player],
+        id: '',
+        players: [],
         board: board
     };
-    joinRoom(player, room)
     addRoom(manager, room)
     return room;
 }
 
-function joinRoom(player: IRoomPlayer, room: IRoom): void {
+export function joinRoom(player: IRoomPlayer, room: IRoom): void {
     room.players.push(player);
 }
 
@@ -58,3 +64,11 @@ function addRoom(manager: IRoomManager, room: IRoom): void {
     manager.rooms.push(room);
 }
 
+export function getRoom(manager: IRoomManager, roomId: string): IRoom {
+    for (let room of manager.rooms) {
+        if (room.id == roomId) {
+            return room;
+        }
+    }
+    throw new Error(`Room with id ${roomId} not found`);
+}

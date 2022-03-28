@@ -7,6 +7,8 @@ import * as spdy from 'spdy';
 // import * as core from "express-serve-static-core";
 import { join, resolve } from "path";
 import { Server as SocketIoServer } from 'socket.io';
+import { createPlayer, getPlayer } from "./player_server";
+import { createRoom, createRoomManager, getRoom, joinRoom } from "./room_server";
 
 const frontDistDir = 'dist/front';
 
@@ -34,8 +36,9 @@ export function expressServer() {
     io.on('connection', (socket) => {
 
         console.log('new connection', socket.id);
-        socket.on('/hello', (data) => {
+        socket.on('/hello', (data, res) => {
             console.log('hello'.yellow, data);
+            res({ cool: true });
         });
 
         socket.on("disconnect", () => {
@@ -53,7 +56,55 @@ export function expressServer() {
     //     res.send({ ok: true });
     // })
 
+    const manager = createRoomManager()
+    registerHanders(app, manager);
+
     server.listen(port, () => console.debug(`🚀 icon memory ready with https on port ${port}!`.green));
     return { server, app };
     // const server = getServer(app);
+}
+
+
+function registerHanders(app: express.Application, manager: IRoomManager) {
+    app.post('/room', (req, res) => {
+        const room = createRoom(manager);
+        return res.send(room);
+    })
+
+    app.post('/players', (req, res) => {
+        const id = req.body.id
+        const playerName = req.body.name
+        const player = createPlayer(id, playerName)
+        return res.send(player);
+    })
+
+    app.post('rooms/:roomId/players', (req, res) => {
+        const playerId = req.body.playerId
+        const playerName = req.body.playerName
+        const roomId = req.params["roomId"];
+        let player;
+        let room;
+        try {
+            player = getPlayer(playerId, playerName)
+            room = getRoom(manager, roomId)
+        }
+        catch (e) {
+            return res.status(400).send(e);
+        }
+        joinRoom(player, room);
+        return res.send({ ok: 'True' });
+    })
+
+    app.post('/room/icons/flip', (req, res) => {
+        const roomId = req.body.roomId;
+        const playerId = req.body.playerId;
+        const position = req.body.position;
+        try {
+            const json = flipIcon(manager, roomId, playerId, position);
+            return res.send(json);
+        }
+        catch (e) {
+            return res.status(400).send({ error: e.message });
+        }
+    })
 }
