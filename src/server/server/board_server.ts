@@ -58,5 +58,10 @@ export function flipIcon(
     } else {
         firstItem.event = undefined; // clear event on first item
     }
+
+    if (board.items.filter(i => i.event === undefined).length == 0) {
+        // TODO emit victory event
+    }
+
     return event;
 }
