@@ -1,13 +1,12 @@
 import { getBoardItem } from "./board";
-import { EVENT_TYPE_FIRST_ITEM_FLIPPED, EVENT_TYPE_SECOND_ITEM_FLIPPED, IBoardItemFlippedEvent, IPosition, IRoomManager } from "./models";
+import { EVENT_TYPE_FIRST_ITEM_FLIPPED, EVENT_TYPE_SECOND_ITEM_FLIPPED, IBoardItemFlippedEvent, IFlipIcon, IRoomManager } from "./models";
+
 
 export function flipIcon(
     manager: IRoomManager,
-    roomId: string,
-    playerId: string,
-    pos: IPosition,
-    firstFlip?: IBoardItemFlippedEvent)
-: IBoardItemFlippedEvent {
+    flipIcon: IFlipIcon)
+    : IBoardItemFlippedEvent {
+    const { roomId, playerId, itemId, firstFlip } = flipIcon;
 
     const room = manager.rooms.find(r => r.id === roomId);
     if (!room) {
@@ -18,7 +17,7 @@ export function flipIcon(
         throw new Error(`Player ${playerId} not found`);
     }
     const board = room.board;
-    const item = getBoardItem(board, pos);
+    const item = getBoardItem(board, itemId);
     if (item.event) {
         throw new Error(`You can't flip an already-flipped item`);
     }

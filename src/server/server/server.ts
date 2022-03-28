@@ -11,7 +11,8 @@ import { createPlayer, getPlayer } from "./player_server";
 import { createRoom, createRoomManager, getRoom, joinRoom } from "./room_server";
 import { Server } from "http";
 import { flipIcon } from "./board_server";
-import { IRoom, IRoomManager, IRoomPlayer } from "./models";
+import { IFlipIcon, IRoom, IRoomManager, IRoomPlayer } from "./models";
+import { stringify } from "querystring";
 
 const frontDistDir = 'dist/front';
 
@@ -56,6 +57,10 @@ export function expressServer() {
             const player = createPlayer(id, playerName)
             getPlayer(player);
         });
+        socket.on('/icon/flip', (flip: IFlipIcon, getPlayer: (player: IRoomPlayer) => void) => {
+            const player = flipIcon(manager, flip)
+            // getPlayer(player);
+        });
 
         socket.on("disconnect", () => {
             // sockets.delete(socket.id);
@@ -77,6 +82,11 @@ export function expressServer() {
     server.listen(port, () => console.debug(`🚀 icon memory ready with https on port ${port}!`.green));
     return { server, app };
     // const server = getServer(app);
+}
+
+interface IFlip {
+    roomId: number;
+
 }
 
 
@@ -124,18 +134,18 @@ function registerHanders(app: express.Application, manager: IRoomManager) {
         return res.send({ ok: 'True' });
     })
 
-    app.post('/room/icons/flip', (req, res) => {
-        const roomId = req.body.roomId;
-        const playerId = req.body.playerId;
-        const position = req.body.position;
-        const flipEvent = req.body.flipEvent; // if the current request corresponds to a 2nd flip,
-        // then flipEvent should contain the first flip
-        try {
-            const json = flipIcon(manager, roomId, playerId, position, flipEvent);
-            return res.send(json);
-        }
-        catch (e) {
-            return res.status(400).send({ error: e.message });
-        }
-    })
+    // app.post('/room/icons/flip', (req, res) => {
+    //     const roomId = req.body.roomId;
+    //     const playerId = req.body.playerId;
+    //     const position = req.body.position;
+    //     const flipEvent = req.body.flipEvent; // if the current request corresponds to a 2nd flip,
+    //     // then flipEvent should contain the first flip
+    //     try {
+    //         const json = flipIcon(manager, roomId, {playerId, itemId, flipEvent});
+    //         return res.send(json);
+    //     }
+    //     catch (e) {
+    //         return res.status(400).send({ error: e.message });
+    //     }
+    // })
 }

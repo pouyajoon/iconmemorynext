@@ -54,7 +54,7 @@ describe("board", () => {
 
         room.board.items[0].icon = 'unique'
 
-        const first = flipIcon(manager, room.id, player.id, { x: 0, y: 0});
+        const first = flipIcon(manager, { roomId: room.id, playerId: player.id, itemId: '0' });
         expect(first.playerId).toBe(player.id)
         expect(first.position1.x).toBe(0)
         expect(first.position1.y).toBe(0)
@@ -62,7 +62,7 @@ describe("board", () => {
 
         expect(getBoardItem(room.board, first.position1).event).toBe(first)  // event should be set
 
-        const second = flipIcon(manager, room.id, player.id, { x: 0, y: 1}, first);
+        const second = flipIcon(manager, { roomId: room.id, playerId: player.id, itemId: '1' }, first);
         expect(second.playerId).toBe(player.id)
         expect(second.isPair).toBe(false)
         expect(second.position1.x).toBe(0)

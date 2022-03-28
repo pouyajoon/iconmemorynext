@@ -7,6 +7,14 @@ export interface IBoard {
     items: IBoardItem[];
 }
 
+export interface IFlipIcon {
+    roomId: string,
+    playerId: string,
+    itemId: string;
+    firstFlip?: IBoardItemFlippedEvent
+}
+
+
 export interface IBoardItem {
     index: number;
     position: IPosition;
