@@ -20,47 +20,39 @@ function createBoard(size: ISize): IBoard {
 }
 
 function createBoardItems(size: ISize): IBoardItem[] {
-    console.log('createBoardItems')
     const items: IBoardItem[] = [];
     for (let y = 0; y < size.height; y++) {
         for (let x = 0; x < size.width; x++) {
             items.push({
-                index: x * size.width + size.height + y,
-                posX: x,
-                posY: y,
+                index: x * size.width + y,
+                position: { x, y },
                 icon: 'unassigned'
             });
         }
     }
     for (let i = 0; i < size.width * size.height / 2; i++) {
-        console.log('createBoardItems ' + i)
         let item = getRandomUnassignedItem(items)
         item.icon = i.toString()
         item = getRandomUnassignedItem(items)
         item.icon = i.toString()
-        console.log(items)
     }
     return items;
 }
 
 function getRandomUnassignedItem(items: IBoardItem[]): IBoardItem{
-    console.log('getRandomUnassignedItem')
     const freeItems = items.filter(item => item.icon === 'unassigned');
     const randpos = Math.random() * freeItems.length;
     const res = freeItems[Math.floor(randpos)]
-    console.log(Math.floor(randpos), res)
     return res
 }
 
 export function createRoom(manager: IRoomManager): IRoom {
     const board = createBoard({ width: DEFAULT_MAP_WIDTH, height: DEFAULT_MAP_HEIGHT });
-    console.log(board);
     const room = {
         id: uuidv4(),
         players: [],
         board: board
     };
-    console.log(room);
     addRoom(manager, room)
     return room;
 }

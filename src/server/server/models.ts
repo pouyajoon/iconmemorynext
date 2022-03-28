@@ -1,3 +1,6 @@
+const EVENT_TYPE_FIRST_ITEM_FLIPPED = 'EVENT_TYPE_FIRST_ITEM_FLIPPED'
+const EVENT_TYPE_SECOND_ITEM_FLIPPED = 'EVENT_TYPE_SECOND_ITEM_FLIPPED'
+
 interface IBoard {
     width: number;
     height: number;
@@ -6,10 +9,9 @@ interface IBoard {
 
 interface IBoardItem {
     index: number;
-    posX: number;
-    posY: number;
+    position: IPosition;
     icon: string;
-    event?: IBoardFirstItemFlippedEvent | IBoardSecondItemFlippedEvent;
+    event?: IBoardFirstItemFlippedEvent | IBoardSecondItemFlippedEvent | null;
 }
 
 interface IRoom {
@@ -38,12 +40,14 @@ interface IPosition {
 }
 
 interface IBoardFirstItemFlippedEvent {
+    type: string
     playerId: string
     timestamp: number
     position: IPosition
 }
 
 interface IBoardSecondItemFlippedEvent {
+    type: string
     playerId: string
     timestamp: number
     position1: IPosition
