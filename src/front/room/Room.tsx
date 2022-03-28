@@ -35,6 +35,7 @@ export function Room() {
                 // localStorage?.setItem('playerId', player.id);
                 // localStorage?.setItem('playerName', player.name);
                 if (!r) {
+                    console.log(`Unknown room ${roomId}. Going to /`);
                     navigate('/');
                 } else {
                     userSocket.emit('/players/add', currentPlayer, r.id, setRoom)
@@ -51,7 +52,7 @@ export function Room() {
             {room.id}
         </h1>
         <hr />
-        {currentPlayer && <Player roomId={room.id} editName={true} player={currentPlayer} />}
+        {currentPlayer && <Player roomId={room.id} edit={true} player={currentPlayer} />}
         <hr />
         <PlayersList players={room.players} />
         <hr />
