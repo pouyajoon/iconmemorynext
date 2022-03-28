@@ -46,12 +46,14 @@ function getRandomUnassignedItem(size: ISize, items: IBoardItem[]): IBoardItem {
 }
 
 export function createRoom(manager: IRoomManager): IRoom {
-    const board = createBoard({ width: DEFAULT_MAP_WIDTH, height: DEFAULT_MAP_HEIGHT});
+    const board = createBoard({ width: DEFAULT_MAP_WIDTH, height: DEFAULT_MAP_HEIGHT });
+    console.log(board);
     const room = {
-        id: '',
+        id: Math.random().toFixed(0),
         players: [],
         board: board
     };
+    console.log(room);
     addRoom(manager, room)
     return room;
 }

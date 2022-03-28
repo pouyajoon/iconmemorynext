@@ -30,7 +30,8 @@
             "scripthost"
         ],
         "types": [
-            "node"
+            "node",
+            "jest"
         ]
     },
     "include": [

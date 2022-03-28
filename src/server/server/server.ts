@@ -44,6 +44,7 @@ export function expressServer() {
             setRooms(manager.rooms);
         });
         socket.on('/rooms/add', (setRoom: (room: IRoom) => void) => {
+            console.log('need add room'.green);
             const room = createRoom(manager);
             console.log('add room'.green, room);
             setRoom({} as IRoom);
@@ -121,7 +122,7 @@ function registerHanders(app: express.Application, manager: IRoomManager) {
         const playerId = req.body.playerId;
         const position = req.body.position;
         const flipEvent = req.body.flipEvent; // if the current request corresponds to a 2nd flip,
-                                              // then flipEvent should contain the first flip
+        // then flipEvent should contain the first flip
         try {
             const json = flipIcon(manager, roomId, playerId, position, flipEvent);
             return res.send(json);

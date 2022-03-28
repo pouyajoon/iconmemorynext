@@ -28,6 +28,9 @@
             "dom",
             "es2019",
             "scripthost"
+        ],
+        "types": [
+            "jest"
         ]
     },
     "include": [
