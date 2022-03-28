@@ -1,7 +1,8 @@
-import openSocket from "socket.io-client";
-import { useEffect } from 'react';
 
-export const userSocket = openSocket('/', { transports: ['websocket'] });
+import { useEffect } from 'react';
+import { userSocket } from '../application/Application';
+
+
 export function SocketIoClient() {
     useEffect(() => {
         userSocket.emit('/hello', { ok: true }, (cool) => {

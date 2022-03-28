@@ -2,6 +2,9 @@ import React from 'react';
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Home } from '../home/Home';
 import { Room } from '../room/Room';
+import openSocket from "socket.io-client";
+
+export const userSocket = openSocket('/', { transports: ['websocket'] });
 
 export function Application() {
     return <div>
@@ -18,9 +21,9 @@ export function Application() {
 }
 
 function A() {
-    return 'AA';
+    return <div>AA</div>;
 }
 
 function Misc() {
-    return 'Misc';
+    return <div>Misc</div>;
 }

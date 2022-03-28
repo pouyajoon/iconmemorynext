@@ -26,6 +26,11 @@ export function expressServer() {
     console.log("SETUP SERVER ON".blue, port, process.env.NODE_ENV, process.env.JUP_ENV);
     const server = new Server(app);
 
+
+    const manager = createRoomManager()
+    registerHanders(app, manager);
+
+
     const io = new SocketIoServer(server, { serveClient: false });
     io.on('connection', (socket) => {
 
@@ -34,6 +39,16 @@ export function expressServer() {
             console.log('hello'.yellow, data);
             res({ cool: true });
         });
+
+        socket.on('/rooms', (setRooms: (rooms: IRoom[]) => void) => {
+            setRooms(manager.rooms);
+        });
+        socket.on('/rooms/add', (setRoom: (room: IRoom) => void) => {
+            const room = createRoom(manager);
+            console.log('add room'.green, room);
+            setRoom({} as IRoom);
+        });
+
 
         socket.on("disconnect", () => {
             // sockets.delete(socket.id);
@@ -51,8 +66,6 @@ export function expressServer() {
     //     res.send({ ok: true });
     // })
 
-    const manager = createRoomManager()
-    registerHanders(app, manager);
 
     server.listen(port, () => console.debug(`🚀 icon memory ready with https on port ${port}!`.green));
     return { server, app };
