@@ -125,12 +125,10 @@ export function flipIcon(manager: IRoomManager, sockets: Map<string, ISocketData
     //     firstItem.event = null; // clear event on first item
     //     firstItem.flipped = false;
     // }
-
     // if (board.items.filter(i => i.event === undefined).length == 0) {
     //     // TODO emit victory event
     // }
     // return room;
-
     // return event;
 }
 
