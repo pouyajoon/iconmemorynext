@@ -1,11 +1,10 @@
 import { wait } from "../../front/room/timer";
 import { getBoardItem } from "./board";
 import { broadcastRoom } from "./broadcast";
-import { EVENT_TYPE_FIRST_ITEM_FLIPPED, EVENT_TYPE_SECOND_ITEM_FLIPPED, IBoard, IBoardItem, IBoardItemFlippedEvent, IFlipIcon, IRoom, IRoomManager } from "./models";
+import { IBoard, IBoardItem, IBoardItemFlippedEvent, IFlipIcon, IRoom, IRoomManager } from "./models";
 import { ISocketData } from "./socket.models";
 
 import { uniq } from 'loadsh';
-
 
 
 function isItemSafe(item: IBoardItem) {
@@ -30,9 +29,10 @@ function checkRoom(room: IRoom, sockets: Map<string, ISocketData>) {
                 updateCount += 1;
             }
         } else {
-            if (playerItems.length > 1) {
-                for (let i = 0; i < playerItems.length; i += 1) {
-                    if (!isItemSafe(playerItems[i])) {
+            if (playerItems.length == 2) {
+                const latest = playerItems.sort((i1, i2) => (i2.lastFlipTime || 0) - (i1.lastFlipTime || 0))
+                if (latest[0] && !isItemSafe(latest[0])) {
+                    for (let i = 0; i < playerItems.length; i += 1) {
                         playerItems[i].playerId = undefined;
                         updateCount += 1;
                     }
@@ -44,7 +44,6 @@ function checkRoom(room: IRoom, sockets: Map<string, ISocketData>) {
     if (updateCount > 0) {
         broadcastRoom(sockets, room);
     }
-
 
     // const players = Object.values(room.players);
     // const hasUpdates = players.filter(player => {
@@ -80,6 +79,8 @@ export function flipIcon(manager: IRoomManager, sockets: Map<string, ISocketData
     }
     const board = room.board;
     const item = getBoardItem(board, index);
+
+    console.log('item'.green, item, currentPlayerId);
 
     // escape already discover
     if (item.discover) {

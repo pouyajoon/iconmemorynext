@@ -20,7 +20,7 @@ export function Board(props: { board: IBoard }) {
     const max = width * 60 + width * 4 + width * 2 + itemMargin * (width + 1);
     // console.log('ITEMS', size, width, board, items);
     return <div style={{ display: 'flex', width: max, flexDirection: 'row', flexWrap: 'wrap' }}>
-        {sortBoardItems(items).map((item, i) => <BoardItem item={item} key={i} />)}
+        {items.map((item, i) => <BoardItem item={item} key={i} />)}
     </div>
 }
 
@@ -30,8 +30,8 @@ function getSvgIcon(icon: string): string {
 }
 
 function createMarkup(svgIcon: string) {
-    return {__html: svgIcon};
-  }
+    return { __html: svgIcon };
+}
 
 function BoardItem(props: { item: IBoardItem }) {
     const roomId = useRoomId();
@@ -53,9 +53,11 @@ function BoardItem(props: { item: IBoardItem }) {
         margin: itemMargin,
         color: color,
     }}
+        data-index={item.index}
         className={classes}
         onClick={() => {
             const flip: IFlipIcon = { roomId, itemId: item.index, currentPlayerId: currentPlayerId };
+            console.log('EMIT', flip);
             userSocket.emit('/icon/flip', flip)
         }}>
         <div className="flip-card-inner">
@@ -74,8 +76,8 @@ function BoardItem(props: { item: IBoardItem }) {
                     width: itemWidth,
                     height: itemWidth,
                 }}
-                dangerouslySetInnerHTML={createMarkup(svgIcon)}
-            ></div>
+                dangerouslySetInnerHTML={createMarkup(svgIcon)}></div>
+            {/* // >{item.icon}</div> */}
         </div>
     </div>
 }

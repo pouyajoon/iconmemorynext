@@ -16,8 +16,6 @@ function createBoard(width: number): IBoard {
     }
 }
 
-
-
 function createBoardItems(size: number): IBoardItem[] {
     const items: IBoardItem[] = [];
     for (let x = 0; x < size; x++) {
