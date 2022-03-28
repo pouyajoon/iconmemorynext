@@ -3,12 +3,8 @@ import cors from "cors";
 import express from "express";
 import enforce from "express-sslify";
 import { join, resolve } from "path";
-import { Server as SocketIoServer } from "socket.io";
-import {
-  createRoom,
-  createRoomManager,
-  joinRoom,
-} from "./room_server";
+import { Server as SocketIoServer, Socket } from "socket.io";
+import { createRoom, createRoomManager, joinRoom } from "./room_server";
 import { Server } from "http";
 import { flipIcon } from "./board_server";
 import { IFlipIcon, IRoom, IRoomManager, IRoomPlayer } from "./models";
@@ -19,53 +15,59 @@ const frontDistDir = "dist/front";
 
 function registerSockets(server: Server, manager: IRoomManager) {
   const sockets = new Map<string, ISocketData>();
-
   const io = new SocketIoServer(server, { serveClient: false });
+
   io.on("connection", (socket) => {
-    console.log("new connection", socket.id);
+    onSocketConnected(sockets, socket, manager);
+  });
+}
 
-    socket.on("/rooms", (setRooms: (rooms: IRoom[]) => void) => {
-      setRooms(manager.rooms);
-    });
+function socketSetRoom(manager: IRoomManager, setRoom: (room: IRoom) => void) {
+  setRoom(createRoom(manager));
+}
 
-    socket.on("/rooms/add", (setRoom: (room: IRoom) => void) => {
-      setRoom(createRoom(manager));
-    });
+function onSocketConnected(
+  sockets: Map<string, ISocketData>,
+  socket: Socket,
+  manager: IRoomManager
+) {
+  console.log("new connection", socket.id);
 
-    socket.on("/rooms/get", (id: string, getRoom: (room?: IRoom) => void) => {
-      try {
-        const room = manager.rooms.find((r) => r.id === id);
-        getRoom(room);
-      } catch (err) {
-        console.log(err);
-      }
-    });
+  socket.on("/rooms", (setRooms: (rooms: IRoom[]) => void) => {
+    setRooms(manager.rooms);
+  });
 
-    socket.on(
-      "/players/add",
-      (player: IRoomPlayer, roomId: string, cb: (room?: IRoom) => void) => {
-        sockets.set(socket.id, { player, roomId, socket });
-        try {
-          const room = joinRoom(manager, player, roomId); // idempotent
-          broadcastRoom(sockets, room);
-          cb(room);
-        } catch (err) {
-          cb(undefined);
-        }
-      }
-    );
+  socket.on("/rooms/add", (setRoom: (room: IRoom) => void) =>
+    socketSetRoom(manager, setRoom)
+  );
 
-    socket.on("/icon/flip", (flip: IFlipIcon) => {
-      try {
-        broadcastRoom(sockets, flipIcon(manager, sockets, flip));
-      } catch (err) {
-        console.log(err);
-      }
-    });
+  socket.on("/rooms/get", (id: string, getRoom: (room?: IRoom) => void) => {
+    try {
+      const room = manager.rooms.find((r) => r.id === id);
+      getRoom(room);
+    } catch (err) {
+      console.log(err);
+    }
+  });
 
-    socket.on("disconnect", () => {
-      sockets.delete(socket.id);
-    });
+  socket.on("/players/add", (player: IRoomPlayer, roomId: string) => {
+    sockets.set(socket.id, { player, roomId, socket });
+    try {
+      const room = joinRoom(manager, player, roomId); // idempotent
+      broadcastRoom(sockets, room);
+    } catch (err) {}
+  });
+
+  socket.on("/icon/flip", (flip: IFlipIcon) => {
+    try {
+      broadcastRoom(sockets, flipIcon(manager, sockets, flip));
+    } catch (err) {
+      console.log(err);
+    }
+  });
+
+  socket.on("disconnect", () => {
+    sockets.delete(socket.id);
   });
 }
 

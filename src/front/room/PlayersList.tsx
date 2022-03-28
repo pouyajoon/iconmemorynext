@@ -61,7 +61,6 @@ export function getPlayerFromLocalStorage(): IRoomPlayer {
 
 function PlayerNameEdit(props: { roomId: string; name: string }) {
   const { name: playerName, roomId } = props;
-  const setRoom = useSetRecoilState(roomAtom(roomId));
   const [name, setName] = useState<string>(playerName);
 
   useEffect(() => {
@@ -69,8 +68,7 @@ function PlayerNameEdit(props: { roomId: string; name: string }) {
     userSocket.emit(
       "/players/add",
       getPlayerFromLocalStorage(),
-      roomId,
-      setRoom
+      roomId
     );
   }, [name]);
 
@@ -86,7 +84,6 @@ function PlayerNameEdit(props: { roomId: string; name: string }) {
 
 function PlayerColorEdit(props: { roomId: string; color: string }) {
   const { color: playerColor, roomId } = props;
-  const setRoom = useSetRecoilState(roomAtom(roomId));
   // const playerId = localStorage?.getItem('player');
   const [color, setColor] = useState<string>(playerColor);
 
@@ -95,8 +92,7 @@ function PlayerColorEdit(props: { roomId: string; color: string }) {
     userSocket.emit(
       "/players/add",
       getPlayerFromLocalStorage(),
-      roomId,
-      setRoom
+      roomId
     );
   }, [color]);
 
