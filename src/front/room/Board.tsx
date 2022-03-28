@@ -11,13 +11,15 @@ import { svgIcons } from "./svgIcons";
 
 const itemWidth = 60;
 const itemMargin = 5;
+const itemBorderWidth = 2;
+const itemBorderRadius = 4;
 
 export function Board(props: { board: IBoard }) {
     const { board } = props;
     const { items, size } = board;
 
     const width = Math.sqrt(size);
-    const max = width * 60 + width * 4 + width * 2 + itemMargin * (width + 1);
+    const max = width * itemWidth + width * itemBorderRadius + width * 2 * itemBorderWidth + itemMargin * (width + 1);
     // console.log('ITEMS', size, width, board, items);
     return <div style={{ display: 'flex', width: max, flexDirection: 'row', flexWrap: 'wrap' }}>
         {sortBoardItems(items).map((item, i) => <BoardItem item={item} key={i} />)}
@@ -52,6 +54,8 @@ function BoardItem(props: { item: IBoardItem }) {
         height: itemWidth * 1.3,
         margin: itemMargin,
         color: color,
+        borderRadius: itemBorderRadius,
+        borderWidth: itemBorderWidth,
         borderColor: item.playerId ? color : undefined,
     }}
         className={classes}
@@ -67,14 +71,8 @@ function BoardItem(props: { item: IBoardItem }) {
             </div>
             <div className="flip-card-back"
                 style={{
-                    margin: 2,
                     display: 'flex',
                     alignItems: 'center',
-                    justifyContent: 'center',
-                    fontSize: '3rem',
-                    fontWeight: 'bold',
-                    width: itemWidth,
-                    height: itemWidth,
                 }}
                 dangerouslySetInnerHTML={createMarkup(svgIcon)}
             ></div>
