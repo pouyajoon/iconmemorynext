@@ -50,17 +50,12 @@ function BoardItem(props: { item: IBoardItem }) {
             if (!item.event) {
                 const firstFlip = room?.board.items.find(i => i.event?.playerId === currentPlayerId)?.event || null;
                 const flip: IFlipIcon = { roomId, itemId: item.index, playerId: currentPlayerId, firstFlip };
-
                 if (room) {
                     const newItems = [...room.board.items];
                     newItems[item.index] = { ...item, flipped: true };
                     setRoom({ ...room, board: { ...room.board, items: newItems } });
                 }
-
-                userSocket.emit('/icon/flip', flip, async (r) => {
-                    await wait(2000);
-                    setRoom(r);
-                })
+                wait(500).then(() => userSocket.emit('/icon/flip', flip, setRoom));
             }
         }}
     >{item.flipped && item.icon}</div>
