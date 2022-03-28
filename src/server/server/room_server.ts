@@ -1,22 +1,26 @@
 
+import { v4 as uuidv4 } from 'uuid';
 
 export const DEFAULT_MAP_WIDTH = 3
-export const DEFAULT_MAP_HEIGHT = 3;
+export const DEFAULT_MAP_HEIGHT = 4;
 
 export function createRoomManager(): IRoomManager {
     return { rooms: [] };
 }
 
 function createBoard(size: ISize): IBoard {
+    if ((size.width * size.height) % 2 == 1) {
+        throw Error(`Invalid size: board ${size.width},${size.height} must be a an even number of cells`);
+    }
     return {
         width: size.width,
         height: size.height,
-        // items: createBoardItems(size)
-        items: []
+        items: createBoardItems(size)
     }
 }
 
 function createBoardItems(size: ISize): IBoardItem[] {
+    console.log('createBoardItems')
     const items: IBoardItem[] = [];
     for (let y = 0; y < size.height; y++) {
         for (let x = 0; x < size.width; x++) {
@@ -28,29 +32,30 @@ function createBoardItems(size: ISize): IBoardItem[] {
         }
     }
     for (let i = 0; i < size.width * size.height / 2; i++) {
-        let item = getRandomUnassignedItem(size, items)
+        console.log('createBoardItems ' + i)
+        let item = getRandomUnassignedItem(items)
         item.icon = i.toString()
-        item = getRandomUnassignedItem(size, items)
+        item = getRandomUnassignedItem(items)
         item.icon = i.toString()
+        console.log(items)
     }
     return items;
 }
 
-function getRandomUnassignedItem(size: ISize, items: IBoardItem[]): IBoardItem {
-    while (true) {
-        const randpos = Math.random() * items.length / 2
-        const res = items[Math.floor(randpos)]
-        if (res.icon == 'unassigned') {
-            return res
-        }
-    }
+function getRandomUnassignedItem(items: IBoardItem[]): IBoardItem{
+    console.log('getRandomUnassignedItem')
+    const freeItems = items.filter(item => item.icon === 'unassigned');
+    const randpos = Math.random() * freeItems.length;
+    const res = freeItems[Math.floor(randpos)]
+    console.log(Math.floor(randpos), res)
+    return res
 }
 
 export function createRoom(manager: IRoomManager): IRoom {
     const board = createBoard({ width: DEFAULT_MAP_WIDTH, height: DEFAULT_MAP_HEIGHT });
     console.log(board);
     const room = {
-        id: (Math.random() * 1e16).toFixed(0),
+        id: uuidv4(),
         players: [],
         board: board
     };

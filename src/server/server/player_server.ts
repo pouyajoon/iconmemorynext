@@ -1,8 +1,8 @@
 import { v4 as uuidv4 } from 'uuid';
-import { v } from 'validator';
+import * as v from 'validator';
 
 export function createPlayer(id: string, name: string): IRoomPlayer {
-    if (!v.isUUID(id)) {
+    if (!v.default.isUUID(id)) {
         id = uuidv4();
     }
     return {
@@ -12,7 +12,7 @@ export function createPlayer(id: string, name: string): IRoomPlayer {
 }
 
 export function getPlayer(id: string, name: string): IRoomPlayer {
-    if (!v.isUUID(id)) {
+    if (!v.default.isUUID(id)) {
         throw new Error(`Player id ${id} is not a valid UUID`);
     }
     return {
