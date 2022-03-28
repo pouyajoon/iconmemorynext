@@ -6,6 +6,7 @@ import { readFileSync } from "fs";
 import * as spdy from 'spdy';
 // import * as core from "express-serve-static-core";
 import { join, resolve } from "path";
+import { Server as SocketIoServer } from 'socket.io';
 
 const frontDistDir = 'dist/front';
 
@@ -28,6 +29,20 @@ export function expressServer() {
     const port = process.env.PORT || 443;
     console.log("SETUP SERVER ON".blue, port, process.env.NODE_ENV, process.env.JUP_ENV);
     const server = getServer(app);
+
+    const io = new SocketIoServer(server, { serveClient: false });
+    io.on('connection', (socket) => {
+
+        console.log('new connection', socket.id);
+        socket.on('/hello', (data) => {
+            console.log('hello'.yellow, data);
+        });
+
+        socket.on("disconnect", () => {
+            // sockets.delete(socket.id);
+            // consoleInfo("socket.io".blue, "a user disconnected", socket.id);
+        });
+    })
 
     app.get('*', function (req, res) {
         const r = resolve(join('dist/front', 'index.html'));
