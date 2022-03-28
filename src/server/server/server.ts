@@ -50,12 +50,18 @@ export function expressServer() {
             setRoom(createRoom(manager));
         });
         socket.on('/rooms/get', (id: string, getRoom: (room?: IRoom) => void) => {
-            const room = manager.rooms.find(r => r.id === id);
-            getRoom(room)
+            try {
+                const room = manager.rooms.find(r => r.id === id);
+                getRoom(room)
+            } catch (err) {
+                console.log(err);
+            }
+
         });
-        socket.on('/players/add', (id: string, playerName: string, getPlayer: (player: IRoomPlayer) => void) => {
-            const player = createPlayer(id, playerName)
-            getPlayer(player);
+        socket.on('/players/add', (player: IRoomPlayer, roomId: string, cb: (room: IRoom) => void) => {
+            const room = getRoom(manager, roomId)
+            joinRoom(player, room);
+            cb(room);
         });
         socket.on('/icon/flip', (flip: IFlipIcon, getPlayer: (player: IRoomPlayer) => void) => {
             const player = flipIcon(manager, flip)
@@ -117,22 +123,22 @@ function registerHanders(app: express.Application, manager: IRoomManager) {
     //     return res.send(room)
     // })
 
-    app.post('rooms/:roomId/players', (req, res) => {
-        const playerId = req.body.playerId
-        const playerName = req.body.playerName
-        const roomId = req.params["roomId"];
-        let player;
-        let room;
-        try {
-            player = getPlayer(playerId, playerName)
-            room = getRoom(manager, roomId)
-        }
-        catch (e) {
-            return res.status(400).send(e);
-        }
-        joinRoom(player, room);
-        return res.send({ ok: 'True' });
-    })
+    // app.post('rooms/:roomId/players', (req, res) => {
+    //     const playerId = req.body.playerId
+    //     const playerName = req.body.playerName
+    //     const roomId = req.params["roomId"];
+    //     let player: IRoomPlayer;
+    //     let room;
+    //     try {
+    //         player = getPlayer(playerId, playerName)
+    //         room = getRoom(manager, roomId)
+    //     }
+    //     catch (e) {
+    //         return res.status(400).send(e);
+    //     }
+    //     joinRoom(player, room);
+    //     return res.send({ ok: true });
+    // })
 
     // app.post('/room/icons/flip', (req, res) => {
     //     const roomId = req.body.roomId;

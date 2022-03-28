@@ -40,7 +40,7 @@ function createBoardItems(size: ISize): IBoardItem[] {
     return items;
 }
 
-function getRandomUnassignedItem(items: IBoardItem[]): IBoardItem{
+function getRandomUnassignedItem(items: IBoardItem[]): IBoardItem {
     const freeItems = items.filter(item => item.icon === 'unassigned');
     const randpos = Math.random() * freeItems.length;
     const res = freeItems[Math.floor(randpos)]
@@ -59,7 +59,9 @@ export function createRoom(manager: IRoomManager): IRoom {
 }
 
 export function joinRoom(player: IRoomPlayer, room: IRoom): void {
-    room.players.push(player);
+    if (!room.players.find(p => player.id === p.id)) {
+        room.players.push(player);
+    }
 }
 
 function addRoom(manager: IRoomManager, room: IRoom): void {

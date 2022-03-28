@@ -4,12 +4,10 @@ import { IBoard, IBoardItem } from "../../server/server/models";
 
 const itemWidth = 60;
 export function Board(props: { board: IBoard }) {
-    const { items, width, height } = props.board;
-    console.log(width, height)
-
+    const { board } = props;
+    const { items, width, height } = board;
     const max = width * 60 + width * 4 + width * 2;
-    // const items: IBoardItem[] = [{ icon: 'a' }]
-    console.log('ITEMS', items);
+    console.log('ITEMS', width, height, board, items);
     return <div style={{ display: 'flex', width: max, flexDirection: 'row', flexWrap: 'wrap' }}>
         {[...items].sort((a, b) => a.index - b.index).map((item, i) => <BoardItem item={item} key={i} />)}
     </div>

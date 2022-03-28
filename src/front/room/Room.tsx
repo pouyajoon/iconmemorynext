@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { IRoom, IRoomPlayer } from '../../server/server/models';
+import { createPlayer } from '../../server/server/player_server';
 import { userSocket } from '../application/Application';
 import { Board } from './Board';
 import { Player, PlayersList } from './PlayersList';
@@ -9,22 +10,27 @@ export function Room() {
 
     const { id } = useParams();
     const [room, setRoom] = useState<IRoom | undefined>();
-    const [player, setPlayer] = useState<IRoomPlayer | undefined>();
 
+    const playerName = localStorage?.getItem('playerName') || Math.random().toString();
+    const playerId = localStorage?.getItem('playerId') || createPlayer(null, playerName).id;
+    const lsPlayer: IRoomPlayer = { id: playerId, name: playerName };
 
+    const [player, setPlayer] = useState<IRoomPlayer>(lsPlayer);
+
+    // useEffect(() => {
+    // }, [])
+
+    console.log(id, room);
     useEffect(() => {
-        const playerId = localStorage?.getItem('playerId')
-        const playerName = Math.random();
-        userSocket.emit('/players/add', playerId, playerName, setPlayer)
-    }, [])
-
-    console.log(id);
-    useEffect(() => {
-        if (player && id) {
+        if (id) {
             console.log('GET', id);
-            userSocket.emit('/rooms/get', id, setRoom)
+            userSocket.emit('/rooms/get', id, ((r: IRoom) => {
+                localStorage?.setItem('playerId', player.id);
+                localStorage?.setItem('playerName', player.name);
+                userSocket.emit('/players/add', player, r.id, setRoom)
+            }))
         }
-    }, [player, id])
+    }, [id])
 
     if (!room) {
         return <div>no room found</div>;
