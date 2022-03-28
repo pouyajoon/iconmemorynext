@@ -11,6 +11,7 @@ import { createPlayer, getPlayer } from "./player_server";
 import { createRoom, createRoomManager, getRoom, joinRoom } from "./room_server";
 import { Server } from "http";
 import { flipIcon } from "./board_server";
+import { IRoom, IRoomManager, IRoomPlayer } from "./models";
 
 const frontDistDir = 'dist/front';
 

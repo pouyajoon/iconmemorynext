@@ -1,4 +1,5 @@
 import React from "react";
+import { IRoomPlayer } from "../../server/server/models";
 
 export function PlayersList(props: { players: IRoomPlayer[] }) {
     const { players } = props;

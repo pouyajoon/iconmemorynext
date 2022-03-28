@@ -1,5 +1,6 @@
 import React, { SetStateAction } from 'react';
 import { useEffect, useState } from 'react';
+import { IRoom } from '../../server/server/models';
 import { userSocket } from '../application/Application';
 import { RoomItem } from './RoomItem';
 

@@ -1,4 +1,5 @@
 import React from "react";
+import { IBoard, IBoardItem } from "../../server/server/models";
 
 
 const itemWidth = 60;

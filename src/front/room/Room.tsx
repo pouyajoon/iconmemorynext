@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { IRoom, IRoomPlayer } from '../../server/server/models';
 import { userSocket } from '../application/Application';
 import { Board } from './Board';
 import { Player, PlayersList } from './PlayersList';
