@@ -1,4 +1,6 @@
-function flipIcon(
+import { getBoardItem } from "./board";
+
+export function flipIcon(
     manager: IRoomManager,
     roomId: string,
     playerId: string,
@@ -16,12 +18,17 @@ function flipIcon(
     }
     const board = room.board;
     const item = getBoardItem(board, pos);
-    if (item.event) {
+    console.log("yay")
+    console.log(item)
+    console.log(item.event)
+    if (item.event !== null) {
         throw new Error(`You can't flip an already-flipped item`);
     }
     if (!firstFlip) {
         // first flip
+        item.event = firstFlip;
         return {
+            type: EVENT_TYPE_FIRST_ITEM_FLIPPED,
             playerId: playerId,
             timestamp: Date.now(),
             position: pos,
@@ -36,6 +43,7 @@ function flipIcon(
     const secondItem = getBoardItem(board, pos);
 
     const event = {
+        type: EVENT_TYPE_SECOND_ITEM_FLIPPED,
         playerId: playerId,
         timestamp: Date.now(),
         position1: firstFlip.position,
