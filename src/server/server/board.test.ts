@@ -4,6 +4,8 @@ import { v4 as uuidv4 } from 'uuid';
 import { createPlayer, getPlayer } from "./player_server";
 import { createRoom, createRoomManager, DEFAULT_MAP_HEIGHT, DEFAULT_MAP_WIDTH, getRoom, joinRoom } from "./room_server";
 import { flipIcon } from "./board_server";
+import { EVENT_TYPE_FIRST_ITEM_FLIPPED, EVENT_TYPE_SECOND_ITEM_FLIPPED } from "./models";
+import { getBoardItem } from "./board";
 
 
 describe("board", () => {
@@ -51,23 +53,26 @@ describe("board", () => {
         joinRoom(player, room);
 
         room.board.items[0].icon = 'unique'
-        let res
 
-        res = flipIcon(manager, room.id, player.id, { x: 0, y: 0});
-        const first = res as IBoardFirstItemFlippedEvent
+        const first = flipIcon(manager, room.id, player.id, { x: 0, y: 0});
         expect(first.playerId).toBe(player.id)
-        expect(first.position.x).toBe(0)
-        expect(first.position.y).toBe(0)
+        expect(first.position1.x).toBe(0)
+        expect(first.position1.y).toBe(0)
         expect(first.type).toBe(EVENT_TYPE_FIRST_ITEM_FLIPPED)
-        console.log('POUET')
-        res = flipIcon(manager, room.id, player.id, { x: 0, y: 1});
-        const second = res as IBoardSecondItemFlippedEvent
+
+        expect(getBoardItem(room.board, first.position1).event).toBe(first)  // event should be set
+
+        const second = flipIcon(manager, room.id, player.id, { x: 0, y: 1}, first);
         expect(second.playerId).toBe(player.id)
         expect(second.isPair).toBe(false)
         expect(second.position1.x).toBe(0)
         expect(second.position1.y).toBe(0)
-        expect(second.position2.x).toBe(0)
-        expect(second.position2.y).toBe(1)
+        expect(second.position2 != undefined).toBe(true)
+        if (second.position2 != undefined) {
+            expect(second.position2.x).toBe(0)
+            expect(second.position2.y).toBe(1)
+        }
         expect(second.type).toBe(EVENT_TYPE_SECOND_ITEM_FLIPPED)
+        expect(getBoardItem(room.board, first.position1).event).toBe(undefined) // event should be cleared
     });
 });
