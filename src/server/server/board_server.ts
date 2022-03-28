@@ -42,42 +42,50 @@ export function flipIcon(manager: IRoomManager, sockets: Map<string, ISocketData
     const board = room.board;
     const item = getBoardItem(board, index);
 
+
+    // escape already discover
+    if (item.discover) {
+        return;
+    }
+    // not current player item
     if (item.playerId && item.playerId !== currentPlayerId) {
         return;
     }
 
-    const otherNotDiscoverItem = board.items.find(i => i.playerId === currentPlayerId && !item.discover);
-    // can only have 1 other not discover item
-    if (!otherNotDiscoverItem) {
-        item.playerId = currentPlayerId;
-        wait(500).then(() => {
-            checkRoom(room, sockets);
-        })
-        return room;
-    }
+    item.playerId = currentPlayerId;
+    wait(500).then(() => checkRoom(room, sockets))
+    return room;
 
-    const otherItemFlippedSameUser = board.items.find(i => i.event?.playerId === currentPlayerId);
-
-    if (otherItemFlippedSameUser === undefined) {
-        // first click
-        item.playerId = currentPlayerId;
-        // item.flipped = true;
-    }
-    if (otherItemFlippedSameUser?.icon === item.icon) {
-        console.log('same icon');
-    } else {
-        console.log('not same icon');
-        // otherItemFlippedSameUser?.event= null;
-    }
-
-    // if (item.flipped){
-    //     board.items
+    // const otherNotDiscoverItem = board.items.find(i => i.playerId === currentPlayerId && !item.discover);
+    // // can only have 1 other not discover item
+    // if (!otherNotDiscoverItem) {
+    //     item.playerId = currentPlayerId;
+    //     // wait(500).then(() => checkRoom(room, sockets))
+    //     return room;
     // }
-    // board.items.
 
-    if (item.event) {
-        throw new Error(`You can't flip an already-flipped item`);
-    }
+    // const otherItemFlippedSameUser = board.items.find(i => i.event?.playerId === currentPlayerId);
+
+    // if (otherItemFlippedSameUser === undefined) {
+    //     // first click
+    //     item.playerId = currentPlayerId;
+    //     // item.flipped = true;
+    // }
+    // if (otherItemFlippedSameUser?.icon === item.icon) {
+    //     console.log('same icon');
+    // } else {
+    //     console.log('not same icon');
+    //     // otherItemFlippedSameUser?.event= null;
+    // }
+
+    // // if (item.flipped){
+    // //     board.items
+    // // }
+    // // board.items.
+
+    // if (item.event) {
+    //     throw new Error(`You can't flip an already-flipped item`);
+    // }
 
     // if (!firstFlip) {
     //     // first flip
@@ -118,10 +126,10 @@ export function flipIcon(manager: IRoomManager, sockets: Map<string, ISocketData
     //     firstItem.flipped = false;
     // }
 
-    if (board.items.filter(i => i.event === undefined).length == 0) {
-        // TODO emit victory event
-    }
-    return room;
+    // if (board.items.filter(i => i.event === undefined).length == 0) {
+    //     // TODO emit victory event
+    // }
+    // return room;
 
     // return event;
 }

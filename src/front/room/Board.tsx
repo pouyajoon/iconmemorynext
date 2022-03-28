@@ -33,7 +33,7 @@ function BoardItem(props: { item: IBoardItem }) {
     }
     const { item } = props;
 
-    const color = room?.players[item.event?.playerId || '0']?.color;
+    const color = room?.players[item.playerId || '0']?.color;
     return <div style={{
         cursor: 'pointer',
         margin: 2,
