@@ -9,16 +9,17 @@ export interface IBoard {
 
 export interface IFlipIcon {
     roomId: string,
-    playerId: string,
+    currentPlayerId: string,
     itemId: number;
-    firstFlip: IBoardItemFlippedEvent | null;
+    // firstFlip: IBoardItemFlippedEvent | null;
 }
 
 
 export interface IBoardItem {
     index: number;
     icon: string;
-    flipped: boolean;
+    playerId?: string;
+    discover: boolean;
     event: IBoardItemFlippedEvent | null;
 }
 

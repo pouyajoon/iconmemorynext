@@ -13,20 +13,14 @@ import { Server } from "http";
 import { flipIcon } from "./board_server";
 import { IFlipIcon, IRoom, IRoomManager, IRoomPlayer } from "./models";
 import { stringify } from "querystring";
+import { ISocketData } from "./socket.models";
+import { broadcastRoom } from "./broadcast";
 
 const frontDistDir = 'dist/front';
 
 
-interface ISocketData {
-    player: IRoomPlayer;
-    roomId: string;
-    socket: Socket;
-}
 
 
-function broadcastRoom(sockets: Map<string, ISocketData>, room: IRoom) {
-    Array.from(sockets.values()).filter(sd => sd.roomId === room.id).map(sd => sd.socket.emit(`/subscribe/room/${room.id}`, room));
-}
 export function expressServer() {
     const app = express();
     app.use(cors());
@@ -76,14 +70,10 @@ export function expressServer() {
                 cb(undefined);
             }
         });
-        socket.on('/icon/flip', (flip: IFlipIcon, cb: (room?: IRoom) => void) => {
+        socket.on('/icon/flip', (flip: IFlipIcon) => {
             try {
-                const event = flipIcon(manager, flip)
-                const room = getRoom(manager, flip.roomId)
-                broadcastRoom(sockets, room);
-                cb(room)
+                broadcastRoom(sockets, flipIcon(manager, sockets, flip));
             } catch (err) {
-                cb(undefined);
                 console.log(err);
             }
         });

@@ -25,8 +25,8 @@ function createBoardItems(size: number): IBoardItem[] {
         items.push({
             index: x,
             event: null,
-            icon: 'unassigned',
-            flipped: false
+            discover: false,
+            icon: 'unassigned'
         });
     }
     for (let i = 0; i < size / 2; i++) {
