@@ -13,7 +13,6 @@
             background-color: transparent;
             border: 1px solid #a1a1a1;
             perspective: 1000px;
-
             cursor: 'pointer';
             display: 'flex';
             align-items: 'center';
@@ -46,6 +45,13 @@
             -webkit-backface-visibility: hidden;
             /* Safari */
             backface-visibility: hidden;
+        }
+
+        .flip-card-front {
+            background-color: #e5e5f7;
+            opacity: 0.8;
+            background-image: linear-gradient(45deg, #444cf7 50%, #e5e5f7 50%);
+            background-size: 10px 10px;
         }
 
         /* Style the back side */
