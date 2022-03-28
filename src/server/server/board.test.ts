@@ -9,12 +9,11 @@ describe("board", () => {
     test("test create room", async () => {
 
         const manager = createRoomManager()
-        // c
         expect(manager.rooms.length).toBe(0);
+
         let room = createRoom(manager);
         const roomId = room.id;
-        console.log(room.id)
-        console.log(v.default.isUUID(room.id))
+
         expect(v.default.isUUID(room.id)).toBe(true)
         expect(room.board.width).toBe(DEFAULT_MAP_WIDTH);
         expect(room.board.height).toBe(DEFAULT_MAP_HEIGHT);
@@ -36,8 +35,20 @@ describe("board", () => {
         expect(player.name).toBe('player')
 
         joinRoom(player, room);
-        getRoom(manager, roomId).players.length == 1;
+        expect(room.players.length).toBe(1);
 
         expect(true).toBe(true);
+    });
+
+
+    test("test flip icons", async () => {
+
+        const manager = createRoomManager()
+        const room = createRoom(manager);
+        const playerName = 'player'
+        const player = createPlayer(null, playerName);
+        joinRoom(player, room);
+
+        // TODO
     });
 });
