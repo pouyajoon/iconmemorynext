@@ -5,6 +5,7 @@ interface IBoard {
 }
 
 interface IBoardItem {
+    index: number;
     posX: number;
     posY: number;
     icon: string;

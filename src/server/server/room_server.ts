@@ -25,6 +25,7 @@ function createBoardItems(size: ISize): IBoardItem[] {
     for (let y = 0; y < size.height; y++) {
         for (let x = 0; x < size.width; x++) {
             items.push({
+                index: x * size.width + size.height + y,
                 posX: x,
                 posY: y,
                 icon: 'unassigned'
