@@ -107,8 +107,10 @@ function registerHanders(app: express.Application, manager: IRoomManager) {
         const roomId = req.body.roomId;
         const playerId = req.body.playerId;
         const position = req.body.position;
+        const flipEvent = req.body.flipEvent; // if the current request corresponds to a 2nd flip,
+                                              // then flipEvent should contain the first flip
         try {
-            const json = flipIcon(manager, roomId, playerId, position);
+            const json = flipIcon(manager, roomId, playerId, position, flipEvent);
             return res.send(json);
         }
         catch (e) {
