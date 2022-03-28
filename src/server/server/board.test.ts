@@ -68,9 +68,10 @@ describe("board", () => {
         expect(second.index2 != undefined).toBe(true)
         if (second.index2 != undefined) {
             expect(second.index2).toBe(1)
+            expect(getBoardItem(room.board, second.index1).event).toBe(undefined) // event should be cleared
+            expect(getBoardItem(room.board, second.index2).event).toBe(undefined)
         }
         expect(second.isPair).toBe(false)
-        expect(getBoardItem(room.board, first.index1).event).toBe(undefined) // event should be cleared
     });
 
     test("test flip icons pair", async () => {
@@ -86,6 +87,11 @@ describe("board", () => {
 
         const first = flipIcon(manager, room.id, player.id, 0);
         const second = flipIcon(manager, room.id, player.id, 1, first);
+        if (second.index2 != undefined) {
+            expect(second.index2).toBe(1)
+            expect(getBoardItem(room.board, second.index1).event).toBe(first)
+            expect(getBoardItem(room.board, second.index2).event).toBe(second)
+        }
 
         expect(second.isPair).toBe(true)
     });

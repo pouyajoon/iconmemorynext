@@ -43,8 +43,7 @@ export function flipIcon(
 
     const firstItem = getBoardItem(board, firstFlip.index1);
     const secondItem = getBoardItem(board, index);
-    console.log(firstItem)
-    console.log(secondItem)
+    const isPair = firstItem.icon == secondItem.icon;
 
     const event = {
         type: EVENT_TYPE_SECOND_ITEM_FLIPPED,
@@ -52,10 +51,12 @@ export function flipIcon(
         timestamp: Date.now(),
         index1: firstFlip.index1,
         index2: index,
-        isPair: firstItem.icon == secondItem.icon,
+        isPair: isPair,
     }
-
-    firstItem.event = undefined; // clear event
-
+    if (isPair) {
+        secondItem.event = event // set event on second item
+    } else {
+        firstItem.event = undefined; // clear event on first item
+    }
     return event;
 }
