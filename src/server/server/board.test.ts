@@ -21,7 +21,7 @@ describe("board", () => {
         expect(room.board.width).toBe(DEFAULT_MAP_WIDTH);
         expect(room.board.height).toBe(DEFAULT_MAP_HEIGHT);
         expect(room.board.items.length).toBe(DEFAULT_MAP_WIDTH * DEFAULT_MAP_HEIGHT);
-        expect(room.players.size).toBe(0)
+        expect(Object.keys(room.players).length).toBe(0)
         manager.rooms.length = 1;
 
         room = getRoom(manager, roomId)
@@ -38,8 +38,7 @@ describe("board", () => {
         expect(player.name).toBe('player')
 
         joinRoom(player, room);
-        console.log(room.players.values())
-        expect(room.players.size).toBe(1);
+        expect(Object.keys(room.players).length).toBe(1)
 
         expect(true).toBe(true);
     });

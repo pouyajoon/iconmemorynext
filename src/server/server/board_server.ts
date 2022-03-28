@@ -13,7 +13,7 @@ export function flipIcon(
     if (!room) {
         throw new Error(`Room ${roomId} not found`);
     }
-    if (room.players.get(playerId) === undefined) {
+    if (room.players[playerId] === undefined) {
         throw new Error(`Player ${playerId} not found`);
     }
     const board = room.board;
