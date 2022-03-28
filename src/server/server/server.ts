@@ -94,10 +94,11 @@ function registerHanders(app: express.Application, manager: IRoomManager) {
 
     app.get('/rooms/:roomId', (req, res) => {
         const roomId = req.params["roomId"];
-        if (!(roomId in manager.rooms)) {
+        const room = res.send(manager.rooms.find(r => r.id === roomId));
+        if (room == null) {
             return res.status(404).send({ error: "Room not found: " + roomId });
         }
-        res.send(manager.rooms[roomId]);
+        return res.send(room)
     })
 
     app.post('rooms/:roomId/players', (req, res) => {

@@ -1,7 +1,7 @@
 
 
-const DEFAULT_MAP_WIDTH = 3
-const DEFAULT_MAP_HEIGHT = 3;
+export const DEFAULT_MAP_WIDTH = 3
+export const DEFAULT_MAP_HEIGHT = 3;
 
 export function createRoomManager(): IRoomManager {
     return { rooms: [] };
