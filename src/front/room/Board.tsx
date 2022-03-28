@@ -44,20 +44,13 @@ function BoardItem(props: { item: IBoardItem }) {
         className={classes}
         onClick={() => {
             if (!item.event) {
-                // const firstFlip = room?.board.items.find(i => i.event?.playerId === currentPlayerId)?.event || null;
                 const flip: IFlipIcon = { roomId, itemId: item.index, currentPlayerId: currentPlayerId };
-                // if (room) {
-                //     const newItems = [...room.board.items];
-                //     newItems[item.index] = { ...item, playerId: currentPlayerId };
-                //     setRoom({ ...room, board: { ...room.board, items: newItems } });
-                // }
                 userSocket.emit('/icon/flip', flip)
             }
         }}>
         <div className="flip-card-inner">
             <div className="flip-card-back"
                 style={{
-                    cursor: 'pointer',
                     margin: 2,
                     display: 'flex',
                     alignItems: 'center',

@@ -14,7 +14,6 @@ export function Room() {
     const [room, setRoom] = useRecoilState(roomAtom(roomId));
     const navigate = useNavigate();
     const lsPlayer: IRoomPlayer = getPlayerFromLocalStorage();
-    // const [player, setPlayer] = useState<IRoomPlayer>(lsPlayer);
 
     const currentPlayer = room?.players[lsPlayer.id] || lsPlayer;
 
@@ -32,8 +31,6 @@ export function Room() {
             console.log('GET', roomId);
             userSocket.emit('/rooms/get', roomId, ((r?: IRoom) => {
                 console.log('ROOM', r);
-                // localStorage?.setItem('playerId', player.id);
-                // localStorage?.setItem('playerName', player.name);
                 if (!r) {
                     console.log(`Unknown room ${roomId}. Going to /`);
                     navigate('/');
@@ -48,10 +45,6 @@ export function Room() {
         return <div>no room found</div>;
     }
     return <div>
-        <h1>
-            {room.id}
-        </h1>
-        <hr />
         {currentPlayer && <Player roomId={room.id} edit={true} player={currentPlayer} />}
         <hr />
         <PlayersList players={room.players} />

@@ -7,6 +7,5 @@ export function Home() {
     return <div>
         <SocketIoClient />
         <Rooms />
-        'HOME !'
     </div>;
 }
