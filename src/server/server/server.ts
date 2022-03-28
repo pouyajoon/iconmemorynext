@@ -61,7 +61,12 @@ export function expressServer() {
 
 
 function registerHanders(app: express.Application, manager: IRoomManager) {
-    app.post('/room', (req, res) => {
+
+    app.get('/rooms', (req, res) => {
+        res.send(manager.rooms);
+    })
+
+    app.post('/rooms', (req, res) => {
         const room = createRoom(manager);
         return res.send(room);
     })
@@ -71,6 +76,14 @@ function registerHanders(app: express.Application, manager: IRoomManager) {
         const playerName = req.body.name
         const player = createPlayer(id, playerName)
         return res.send(player);
+    })
+
+    app.get('/rooms/:roomId', (req, res) => {
+        const roomId = req.params["roomId"];
+        if (!(roomId in manager.rooms)) {
+            return res.status(404).send({ error: "Room not found: " + roomId });
+        }
+        res.send(manager.rooms[roomId]);
     })
 
     app.post('rooms/:roomId/players', (req, res) => {
