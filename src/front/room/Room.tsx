@@ -1,36 +1,47 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import { atomFamily, useRecoilState } from 'recoil';
 import { IRoom, IRoomPlayer } from '../../server/server/models';
 import { createPlayer } from '../../server/server/player_server';
 import { userSocket } from '../application/Application';
 import { Board } from './Board';
-import { Player, PlayersList } from './PlayersList';
+import { getPlayerFromLocalStorage, Player, PlayersList } from './PlayersList';
+import { roomAtom, useRoomId } from './rooms.recoil';
+
 
 export function Room() {
+    const roomId = useRoomId();
+    const [room, setRoom] = useRecoilState(roomAtom(roomId));
+    const navigate = useNavigate();
+    const lsPlayer: IRoomPlayer = getPlayerFromLocalStorage();
+    // const [player, setPlayer] = useState<IRoomPlayer>(lsPlayer);
 
-    const { id } = useParams();
-    const [room, setRoom] = useState<IRoom | undefined>();
+    const currentPlayer = room?.players[lsPlayer.id] || lsPlayer;
 
-    const playerName = localStorage?.getItem('playerName') || Math.random().toString();
-    const playerId = localStorage?.getItem('playerId') || createPlayer(null, playerName).id;
-    const lsPlayer: IRoomPlayer = { id: playerId, name: playerName, score: 0 };
-
-    const [player, setPlayer] = useState<IRoomPlayer>(lsPlayer);
-
-    // useEffect(() => {
-    // }, [])
-
-    console.log(id, room);
     useEffect(() => {
-        if (id) {
-            console.log('GET', id);
-            userSocket.emit('/rooms/get', id, ((r: IRoom) => {
-                localStorage?.setItem('playerId', player.id);
-                localStorage?.setItem('playerName', player.name);
-                userSocket.emit('/players/add', player, r.id, setRoom)
+        console.log('subscribe', roomId);
+        userSocket.on(`/subscribe/room/${roomId}`, (r) => {
+            console.log('GET ROOM', r);
+            setRoom(r);
+        });
+    }, [])
+
+    console.log(roomId, room);
+    useEffect(() => {
+        if (roomId) {
+            console.log('GET', roomId);
+            userSocket.emit('/rooms/get', roomId, ((r?: IRoom) => {
+                console.log('ROOM', r);
+                // localStorage?.setItem('playerId', player.id);
+                // localStorage?.setItem('playerName', player.name);
+                if (!r) {
+                    navigate('/');
+                } else {
+                    userSocket.emit('/players/add', currentPlayer, r.id, setRoom)
+                }
             }))
         }
-    }, [id])
+    }, [roomId])
 
     if (!room) {
         return <div>no room found</div>;
@@ -40,7 +51,7 @@ export function Room() {
             {room.id}
         </h1>
         <hr />
-        {player && <Player player={player} />}
+        {currentPlayer && <Player roomId={room.id} editName={true} player={currentPlayer} />}
         <hr />
         <PlayersList players={room.players} />
         <hr />

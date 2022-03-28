@@ -31,6 +31,7 @@ export function flipIcon(
             isPair: false
         };
         item.event = event;
+        item.flipped = true;
         return event;
     }
 
@@ -52,8 +53,10 @@ export function flipIcon(
     }
     if (isPair) {
         secondItem.event = event // set event on second item
+        secondItem.flipped = true;
     } else {
-        firstItem.event = undefined; // clear event on first item
+        firstItem.event = null; // clear event on first item
+        firstItem.flipped = false;
     }
 
     if (board.items.filter(i => i.event === undefined).length == 0) {

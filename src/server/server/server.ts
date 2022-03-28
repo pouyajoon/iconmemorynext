@@ -6,8 +6,8 @@ import { readFileSync } from "fs";
 import * as spdy from 'spdy';
 // import * as core from "express-serve-static-core";
 import { join, resolve } from "path";
-import { Server as SocketIoServer } from 'socket.io';
-import { createPlayer, getPlayer } from "./player_server";
+import { Server as SocketIoServer, Socket } from 'socket.io';
+import { createPlayer } from "./player_server";
 import { createRoom, createRoomManager, getRoom, joinRoom } from "./room_server";
 import { Server } from "http";
 import { flipIcon } from "./board_server";
@@ -16,6 +16,17 @@ import { stringify } from "querystring";
 
 const frontDistDir = 'dist/front';
 
+
+interface ISocketData {
+    player: IRoomPlayer;
+    roomId: string;
+    socket: Socket;
+}
+
+
+function broadcastRoom(sockets: Map<string, ISocketData>, room: IRoom) {
+    Array.from(sockets.values()).filter(sd => sd.roomId === room.id).map(sd => sd.socket.emit(`/subscribe/room/${room.id}`, room));
+}
 export function expressServer() {
     const app = express();
     app.use(cors());
@@ -31,17 +42,13 @@ export function expressServer() {
 
 
     const manager = createRoomManager()
-    registerHanders(app, manager);
 
+    const sockets = new Map<string, ISocketData>();
 
     const io = new SocketIoServer(server, { serveClient: false });
     io.on('connection', (socket) => {
 
         console.log('new connection', socket.id);
-        socket.on('/hello', (data, res) => {
-            console.log('hello'.yellow, data);
-            res({ cool: true });
-        });
 
         socket.on('/rooms', (setRooms: (rooms: IRoom[]) => void) => {
             setRooms(manager.rooms);
@@ -58,18 +65,31 @@ export function expressServer() {
             }
 
         });
-        socket.on('/players/add', (player: IRoomPlayer, roomId: string, cb: (room: IRoom) => void) => {
-            const room = getRoom(manager, roomId)
-            joinRoom(player, room);
-            cb(room);
+        socket.on('/players/add', (player: IRoomPlayer, roomId: string, cb: (room?: IRoom) => void) => {
+            sockets.set(socket.id, { player, roomId, socket });
+            try {
+                const room = joinRoom(manager, player, roomId);
+                broadcastRoom(sockets, room);
+                cb(room);
+            }
+            catch (err) {
+                cb(undefined);
+            }
         });
-        socket.on('/icon/flip', (flip: IFlipIcon, getPlayer: (player: IRoomPlayer) => void) => {
-            const player = flipIcon(manager, flip)
-            // getPlayer(player);
+        socket.on('/icon/flip', (flip: IFlipIcon, cb: (room?: IRoom) => void) => {
+            try {
+                const event = flipIcon(manager, flip)
+                const room = getRoom(manager, flip.roomId)
+                broadcastRoom(sockets, room);
+                cb(room)
+            } catch (err) {
+                cb(undefined);
+                console.log(err);
+            }
         });
 
         socket.on("disconnect", () => {
-            // sockets.delete(socket.id);
+            sockets.delete(socket.id);
             // consoleInfo("socket.io".blue, "a user disconnected", socket.id);
         });
     })
@@ -93,65 +113,4 @@ export function expressServer() {
 interface IFlip {
     roomId: number;
 
-}
-
-
-function registerHanders(app: express.Application, manager: IRoomManager) {
-
-    // app.get('/rooms', (req, res) => {
-    //     res.send(manager.rooms);
-    // })
-
-    // app.post('/rooms', (req, res) => {
-    //     const room = createRoom(manager);
-    //     return res.send(room);
-    // })
-
-    app.post('/players', (req, res) => {
-        const id = req.body.id
-        const playerName = req.body.name
-        const player = createPlayer(id, playerName)
-        return res.send(player);
-    })
-
-    // app.get('/rooms/:roomId', (req, res) => {
-    //     const roomId = req.params["roomId"];
-    //     const room = res.send(manager.rooms.find(r => r.id === roomId));
-    //     if (room == null) {
-    //         return res.status(404).send({ error: "Room not found: " + roomId });
-    //     }
-    //     return res.send(room)
-    // })
-
-    // app.post('rooms/:roomId/players', (req, res) => {
-    //     const playerId = req.body.playerId
-    //     const playerName = req.body.playerName
-    //     const roomId = req.params["roomId"];
-    //     let player: IRoomPlayer;
-    //     let room;
-    //     try {
-    //         player = getPlayer(playerId, playerName)
-    //         room = getRoom(manager, roomId)
-    //     }
-    //     catch (e) {
-    //         return res.status(400).send(e);
-    //     }
-    //     joinRoom(player, room);
-    //     return res.send({ ok: true });
-    // })
-
-    // app.post('/room/icons/flip', (req, res) => {
-    //     const roomId = req.body.roomId;
-    //     const playerId = req.body.playerId;
-    //     const position = req.body.position;
-    //     const flipEvent = req.body.flipEvent; // if the current request corresponds to a 2nd flip,
-    //     // then flipEvent should contain the first flip
-    //     try {
-    //         const json = flipIcon(manager, roomId, {playerId, itemId, flipEvent});
-    //         return res.send(json);
-    //     }
-    //     catch (e) {
-    //         return res.status(400).send({ error: e.message });
-    //     }
-    // })
 }

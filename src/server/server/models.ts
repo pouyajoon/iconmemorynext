@@ -1,11 +1,9 @@
-import { REPLCommandAction } from "repl";
 
 export const EVENT_TYPE_FIRST_ITEM_FLIPPED = 'EVENT_TYPE_FIRST_ITEM_FLIPPED'
 export const EVENT_TYPE_SECOND_ITEM_FLIPPED = 'EVENT_TYPE_SECOND_ITEM_FLIPPED'
 
 export interface IBoard {
-    width: number;
-    height: number;
+    size: number;
     items: IBoardItem[];
 }
 
@@ -13,14 +11,15 @@ export interface IFlipIcon {
     roomId: string,
     playerId: string,
     itemId: number;
-    firstFlip?: IBoardItemFlippedEvent
+    firstFlip: IBoardItemFlippedEvent | null;
 }
 
 
 export interface IBoardItem {
     index: number;
     icon: string;
-    event?: IBoardItemFlippedEvent;
+    flipped: boolean;
+    event: IBoardItemFlippedEvent | null;
 }
 
 export interface IRoom {
@@ -33,6 +32,7 @@ export interface IRoomPlayer {
     id: string;
     name: string;
     score: number;
+    color: string;
 }
 
 export interface IRoomManager {

@@ -1,12 +1,11 @@
 import "colors";
 import * as v from 'validator';
 import { v4 as uuidv4 } from 'uuid';
-import { createPlayer, getPlayer } from "./player_server";
-import { createRoom, createRoomManager, DEFAULT_MAP_HEIGHT, DEFAULT_MAP_WIDTH, getRoom, joinRoom } from "./room_server";
+import { createPlayer } from "./player_server";
+import { createRoom, createRoomManager, DEFAULT_MAP_WIDTH, getRoom, joinRoom } from "./room_server";
 import { flipIcon } from "./board_server";
-import { EVENT_TYPE_FIRST_ITEM_FLIPPED, EVENT_TYPE_SECOND_ITEM_FLIPPED } from "./models";
+import { EVENT_TYPE_FIRST_ITEM_FLIPPED, EVENT_TYPE_SECOND_ITEM_FLIPPED, IRoom } from "./models";
 import { getBoardItem } from "./board";
-
 
 describe("board", () => {
     test("test create room", async () => {
@@ -14,13 +13,12 @@ describe("board", () => {
         const manager = createRoomManager()
         expect(manager.rooms.length).toBe(0);
 
-        let room = createRoom(manager);
+        let room: IRoom | undefined = createRoom(manager);
         const roomId = room.id;
 
         expect(v.default.isUUID(room.id)).toBe(true)
-        expect(room.board.width).toBe(DEFAULT_MAP_WIDTH);
-        expect(room.board.height).toBe(DEFAULT_MAP_HEIGHT);
-        expect(room.board.items.length).toBe(DEFAULT_MAP_WIDTH * DEFAULT_MAP_HEIGHT);
+        expect(room.board.size).toBe(DEFAULT_MAP_WIDTH * DEFAULT_MAP_WIDTH);
+        expect(room.board.items.length).toBe(DEFAULT_MAP_WIDTH * DEFAULT_MAP_WIDTH);
         expect(Object.keys(room.players).length).toBe(0)
         manager.rooms.length = 1;
 
@@ -28,16 +26,16 @@ describe("board", () => {
         expect(room.id).toBe(roomId)
 
         const playerId = uuidv4();
-        const playerName = 'player'
-        let player = createPlayer(playerId, playerName);
+        // const playerName = 'player'
+        const player = createPlayer('player');
         expect(player.id).toBe(playerId)
         expect(player.name).toBe('player')
 
-        player = getPlayer(playerId, playerName)
+        // player = getPlayer(playerId, playerName)
         expect(player.id).toBe(playerId)
         expect(player.name).toBe('player')
 
-        joinRoom(player, room);
+        joinRoom(manager, player, roomId);
         expect(Object.keys(room.players).length).toBe(1)
 
         expect(true).toBe(true);
@@ -49,12 +47,12 @@ describe("board", () => {
         const manager = createRoomManager()
         const room = createRoom(manager);
         const playerName = 'player'
-        const player = createPlayer(null, playerName);
-        joinRoom(player, room);
+        const player = createPlayer(playerName);
+        joinRoom(manager, player, room.id);
 
         room.board.items[0].icon = 'unique'
 
-        const first = flipIcon(manager, { roomId: room.id, playerId: player.id, itemId: 0 });
+        const first = flipIcon(manager, { roomId: room.id, playerId: player.id, itemId: 0, firstFlip: null });
         expect(first.playerId).toBe(player.id)
         expect(first.index1).toBe(0)
         expect(first.type).toBe(EVENT_TYPE_FIRST_ITEM_FLIPPED)
@@ -78,13 +76,13 @@ describe("board", () => {
         const manager = createRoomManager()
         const room = createRoom(manager);
         const playerName = 'player'
-        const player = createPlayer(null, playerName);
-        joinRoom(player, room);
+        const player = createPlayer(playerName);
+        joinRoom(manager, player, room.id);
 
         room.board.items[0].icon = 'unique'
         room.board.items[1].icon = 'unique'
 
-        const first = flipIcon(manager, { roomId: room.id, playerId: player.id, itemId: 0 });
+        const first = flipIcon(manager, { roomId: room.id, playerId: player.id, itemId: 0, firstFlip: null });
         const second = flipIcon(manager, { roomId: room.id, playerId: player.id, itemId: 1, firstFlip: first });
         if (second.index2 != undefined) {
             expect(second.index2).toBe(1)

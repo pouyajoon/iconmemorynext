@@ -2,36 +2,34 @@
 import { v4 as uuidv4 } from 'uuid';
 import { IBoard, IBoardItem, IRoom, IRoomManager, IRoomPlayer, ISize } from './models';
 
-export const DEFAULT_MAP_WIDTH = 3
-export const DEFAULT_MAP_HEIGHT = 4;
+export const DEFAULT_MAP_WIDTH = 4;
 
 export function createRoomManager(): IRoomManager {
     return { rooms: [] };
 }
 
-function createBoard(size: ISize): IBoard {
-    if ((size.width * size.height) % 2 == 1) {
-        throw Error(`Invalid size: board ${size.width},${size.height} must be a an even number of cells`);
-    }
+function createBoard(width: number): IBoard {
+    const size = width * width;
     return {
-        width: size.width,
-        height: size.height,
+        size,
         items: createBoardItems(size)
     }
 }
 
-function createBoardItems(size: ISize): IBoardItem[] {
+
+
+function createBoardItems(size: number): IBoardItem[] {
+    console.log(size);
     const items: IBoardItem[] = [];
-    for (let y = 0; y < size.height; y++) {
-        for (let x = 0; x < size.width; x++) {
-            items.push({
-                index: x * size.width + y,
-                icon: 'unassigned',
-                event: undefined
-            });
-        }
+    for (let x = 0; x < size; x++) {
+        items.push({
+            index: x,
+            event: null,
+            icon: 'unassigned',
+            flipped: false
+        });
     }
-    for (let i = 0; i < size.width * size.height / 2; i++) {
+    for (let i = 0; i < size / 2; i++) {
         let item = getRandomUnassignedItem(items)
         item.icon = i.toString()
         item = getRandomUnassignedItem(items)
@@ -48,7 +46,7 @@ function getRandomUnassignedItem(items: IBoardItem[]): IBoardItem {
 }
 
 export function createRoom(manager: IRoomManager): IRoom {
-    const board = createBoard({ width: DEFAULT_MAP_WIDTH, height: DEFAULT_MAP_HEIGHT });
+    const board = createBoard(DEFAULT_MAP_WIDTH);
     const room = {
         id: uuidv4(),
         players: {},
@@ -58,8 +56,11 @@ export function createRoom(manager: IRoomManager): IRoom {
     return room;
 }
 
-export function joinRoom(player: IRoomPlayer, room: IRoom): void {
+export function joinRoom(manager: IRoomManager, player: IRoomPlayer, roomId: string) {
+    const room = getRoom(manager, roomId)
     room.players[player.id] = player;
+    console.log(room.players, player);
+    return room;
 }
 
 function addRoom(manager: IRoomManager, room: IRoom): void {
