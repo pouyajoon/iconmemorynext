@@ -13,6 +13,9 @@ import { createRoom, createRoomManager, getRoom, joinRoom } from "./room_server"
 const frontDistDir = 'dist/front';
 
 function getServer(app: express.Application) {
+    if (process.env.NODE_ENV === 'production') {
+        return app;
+    }
     const key = readFileSync(`./cert/keys/server.key`, 'utf8');
     const cert = readFileSync(`./cert/keys/server.crt`, 'utf8');
     const credentials: spdy.server.ServerOptions = { key, cert, spdy: { plain: false } };
