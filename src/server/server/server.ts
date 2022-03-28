@@ -9,18 +9,19 @@ import { join, resolve } from "path";
 import { Server as SocketIoServer } from 'socket.io';
 import { createPlayer, getPlayer } from "./player_server";
 import { createRoom, createRoomManager, getRoom, joinRoom } from "./room_server";
+import { Server } from "http";
 
 const frontDistDir = 'dist/front';
 
-function getServer(app: express.Application) {
-    if (process.env.NODE_ENV === 'production') {
-        return app;
-    }
-    const key = readFileSync(`./cert/keys/server.key`, 'utf8');
-    const cert = readFileSync(`./cert/keys/server.crt`, 'utf8');
-    const credentials: spdy.server.ServerOptions = { key, cert, spdy: { plain: false } };
-    return spdy.createServer(credentials, app);
-}
+// function getServer(app: express.Application) {
+//     if (process.env.NODE_ENV === 'production') {
+//         return app;
+//     }
+//     const key = readFileSync(`./cert/keys/server.key`, 'utf8');
+//     const cert = readFileSync(`./cert/keys/server.crt`, 'utf8');
+//     const credentials: spdy.server.ServerOptions = { key, cert, spdy: { plain: false } };
+//     return spdy.createServer(credentials, app);
+// }
 
 export function expressServer() {
     const app = express();
@@ -31,9 +32,11 @@ export function expressServer() {
     if (process.env.NODE_ENV === 'production') {
         app.use(enforce.HTTPS({ trustProtoHeader: true }));
     }
-    const port = process.env.PORT || 443;
+    // const port = process.env.PORT || 443;
+    const port = 80;
     console.log("SETUP SERVER ON".blue, port, process.env.NODE_ENV, process.env.JUP_ENV);
-    const server = getServer(app);
+    // const server = getServer(app);
+    const server = new Server(app);
 
     const io = new SocketIoServer(server, { serveClient: false });
     io.on('connection', (socket) => {
