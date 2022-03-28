@@ -19,8 +19,9 @@ export interface IBoardItem {
     index: number;
     icon: string;
     playerId?: string;
+    lastFlipTime?: number;
     discover: boolean;
-    event: IBoardItemFlippedEvent | null;
+    // event: IBoardItemFlippedEvent | null;
 }
 
 export interface IRoom {

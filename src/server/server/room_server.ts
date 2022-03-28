@@ -19,12 +19,10 @@ function createBoard(width: number): IBoard {
 
 
 function createBoardItems(size: number): IBoardItem[] {
-    console.log(size);
     const items: IBoardItem[] = [];
     for (let x = 0; x < size; x++) {
         items.push({
             index: x,
-            event: null,
             discover: false,
             icon: 'unassigned'
         });
@@ -59,7 +57,6 @@ export function createRoom(manager: IRoomManager): IRoom {
 export function joinRoom(manager: IRoomManager, player: IRoomPlayer, roomId: string) {
     const room = getRoom(manager, roomId)
     room.players[player.id] = player;
-    console.log(room.players, player);
     return room;
 }
 

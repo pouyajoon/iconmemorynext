@@ -43,10 +43,8 @@ function BoardItem(props: { item: IBoardItem }) {
     }}
         className={classes}
         onClick={() => {
-            if (!item.event) {
-                const flip: IFlipIcon = { roomId, itemId: item.index, currentPlayerId: currentPlayerId };
-                userSocket.emit('/icon/flip', flip)
-            }
+            const flip: IFlipIcon = { roomId, itemId: item.index, currentPlayerId: currentPlayerId };
+            userSocket.emit('/icon/flip', flip)
         }}>
         <div className="flip-card-inner">
             <div className="flip-card-back"

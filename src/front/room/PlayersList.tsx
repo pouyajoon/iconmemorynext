@@ -101,7 +101,6 @@ function PlayerColorEdit(props: { roomId: string; color: string }) {
             type="color"
             value={playerColor}
             onChange={(e) => {
-                console.log(e.target.value);
                 setColor(e.target.value);
             }}
         />
