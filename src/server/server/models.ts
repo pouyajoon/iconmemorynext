@@ -1,3 +1,5 @@
+import { REPLCommandAction } from "repl";
+
 export const EVENT_TYPE_FIRST_ITEM_FLIPPED = 'EVENT_TYPE_FIRST_ITEM_FLIPPED'
 export const EVENT_TYPE_SECOND_ITEM_FLIPPED = 'EVENT_TYPE_SECOND_ITEM_FLIPPED'
 
@@ -23,13 +25,14 @@ export interface IBoardItem {
 
 export interface IRoom {
     id: string;
-    players: IRoomPlayer[];
+    players: Record<string, IRoomPlayer>;
     board: IBoard;
 }
 
 export interface IRoomPlayer {
     id: string;
     name: string;
+    score: number;
 }
 
 export interface IRoomManager {

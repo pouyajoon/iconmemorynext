@@ -1,11 +1,11 @@
 import React from "react";
 import { IRoomPlayer } from "../../server/server/models";
 
-export function PlayersList(props: { players: IRoomPlayer[] }) {
+export function PlayersList(props: { players: Record<string, IRoomPlayer> }) {
     const { players } = props;
-    if (players.length > 0) {
+    if (Object.keys(players).length > 0) {
         return <ul>
-            {players.map((player, i) => <li key={i}><Player player={player} /></li>)}
+            {Object.values(players).map((player, i) => <li key={i}><Player player={player} /></li>)}
         </ul>
     }
     return null;

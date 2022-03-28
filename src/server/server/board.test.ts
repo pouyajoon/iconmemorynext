@@ -21,7 +21,7 @@ describe("board", () => {
         expect(room.board.width).toBe(DEFAULT_MAP_WIDTH);
         expect(room.board.height).toBe(DEFAULT_MAP_HEIGHT);
         expect(room.board.items.length).toBe(DEFAULT_MAP_WIDTH * DEFAULT_MAP_HEIGHT);
-        expect(room.players.length).toBe(0)
+        expect(Object.keys(room.players).length).toBe(0)
         manager.rooms.length = 1;
 
         room = getRoom(manager, roomId)
@@ -38,7 +38,7 @@ describe("board", () => {
         expect(player.name).toBe('player')
 
         joinRoom(player, room);
-        expect(room.players.length).toBe(1);
+        expect(Object.keys(room.players).length).toBe(1)
 
         expect(true).toBe(true);
     });
@@ -67,9 +67,10 @@ describe("board", () => {
         expect(second.index2 != undefined).toBe(true)
         if (second.index2 != undefined) {
             expect(second.index2).toBe(1)
+            expect(getBoardItem(room.board, second.index1).event).toBe(undefined) // event should be cleared
+            expect(getBoardItem(room.board, second.index2).event).toBe(undefined)
         }
         expect(second.isPair).toBe(false)
-        expect(getBoardItem(room.board, first.index1).event).toBe(undefined) // event should be cleared
     });
 
     test("test flip icons pair", async () => {
@@ -85,7 +86,11 @@ describe("board", () => {
 
         const first = flipIcon(manager, { roomId: room.id, playerId: player.id, itemId: 0 });
         const second = flipIcon(manager, { roomId: room.id, playerId: player.id, itemId: 1, firstFlip: first });
-
+        if (second.index2 != undefined) {
+            expect(second.index2).toBe(1)
+            expect(getBoardItem(room.board, second.index1).event).toBe(first)
+            expect(getBoardItem(room.board, second.index2).event).toBe(second)
+        }
         expect(second.isPair).toBe(true)
     });
 });

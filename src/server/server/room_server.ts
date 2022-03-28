@@ -51,7 +51,7 @@ export function createRoom(manager: IRoomManager): IRoom {
     const board = createBoard({ width: DEFAULT_MAP_WIDTH, height: DEFAULT_MAP_HEIGHT });
     const room = {
         id: uuidv4(),
-        players: [],
+        players: {},
         board: board
     };
     addRoom(manager, room)
@@ -59,9 +59,7 @@ export function createRoom(manager: IRoomManager): IRoom {
 }
 
 export function joinRoom(player: IRoomPlayer, room: IRoom): void {
-    if (!room.players.find(p => player.id === p.id)) {
-        room.players.push(player);
-    }
+    room.players[player.id] = player;
 }
 
 function addRoom(manager: IRoomManager, room: IRoom): void {

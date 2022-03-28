@@ -13,7 +13,7 @@ export function Room() {
 
     const playerName = localStorage?.getItem('playerName') || Math.random().toString();
     const playerId = localStorage?.getItem('playerId') || createPlayer(null, playerName).id;
-    const lsPlayer: IRoomPlayer = { id: playerId, name: playerName };
+    const lsPlayer: IRoomPlayer = { id: playerId, name: playerName, score: 0 };
 
     const [player, setPlayer] = useState<IRoomPlayer>(lsPlayer);
 
