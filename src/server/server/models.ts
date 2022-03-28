@@ -1,5 +1,3 @@
-const EVENT_TYPE_BOARD_ITEM_FLIPPED = 'BOARD_ITEM_FLIPPED'
-
 interface IBoard {
     width: number;
     height: number;
@@ -10,7 +8,7 @@ interface IBoardItem {
     posX: number;
     posY: number;
     icon: string;
-    event?: IBoardItemFlippedEvent;
+    event?: IBoardFirstItemFlippedEvent | IBoardSecondItemFlippedEvent;
 }
 
 interface IRoom {
@@ -38,8 +36,17 @@ interface IPosition {
     y: number;
 }
 
-interface IBoardItemFlippedEvent {
-    type: string
+interface IBoardFirstItemFlippedEvent {
     playerId: string
     timestamp: number
+    position: IPosition
 }
+
+interface IBoardSecondItemFlippedEvent {
+    playerId: string
+    timestamp: number
+    position1: IPosition
+    position2: IPosition
+    isPair: boolean;
+}
+

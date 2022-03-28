@@ -74,7 +74,12 @@ export function expressServer() {
 
 
 function registerHanders(app: express.Application, manager: IRoomManager) {
-    app.post('/room', (req, res) => {
+
+    app.get('/rooms', (req, res) => {
+        res.send(manager.rooms);
+    })
+
+    app.post('/rooms', (req, res) => {
         const room = createRoom(manager);
         return res.send(room);
     })
@@ -84,6 +89,14 @@ function registerHanders(app: express.Application, manager: IRoomManager) {
         const playerName = req.body.name
         const player = createPlayer(id, playerName)
         return res.send(player);
+    })
+
+    app.get('/rooms/:roomId', (req, res) => {
+        const roomId = req.params["roomId"];
+        if (!(roomId in manager.rooms)) {
+            return res.status(404).send({ error: "Room not found: " + roomId });
+        }
+        res.send(manager.rooms[roomId]);
     })
 
     app.post('rooms/:roomId/players', (req, res) => {
@@ -107,8 +120,10 @@ function registerHanders(app: express.Application, manager: IRoomManager) {
         const roomId = req.body.roomId;
         const playerId = req.body.playerId;
         const position = req.body.position;
+        const flipEvent = req.body.flipEvent; // if the current request corresponds to a 2nd flip,
+                                              // then flipEvent should contain the first flip
         try {
-            const json = flipIcon(manager, roomId, playerId, position);
+            const json = flipIcon(manager, roomId, playerId, position, flipEvent);
             return res.send(json);
         }
         catch (e) {

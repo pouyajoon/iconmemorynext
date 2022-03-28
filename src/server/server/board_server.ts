@@ -1,12 +1,11 @@
-function createBoardItemFlippedEvent(playerId: string, timestamp: number) {
-    return {
-        type: EVENT_TYPE_BOARD_ITEM_FLIPPED,
-        playerId: playerId,
-        timestamp: timestamp
-    };
-}
+function flipIcon(
+    manager: IRoomManager,
+    roomId: string,
+    playerId: string,
+    pos: IPosition,
+    firstFlip?: IBoardFirstItemFlippedEvent)
+: IBoardFirstItemFlippedEvent | IBoardSecondItemFlippedEvent {
 
-function flipIcon(manager: IRoomManager, roomId: string, playerId: string, pos: IPosition) {
     const room = manager.rooms.find(r => r.id === roomId);
     if (!room) {
         throw new Error(`Room ${roomId} not found`);
@@ -20,6 +19,32 @@ function flipIcon(manager: IRoomManager, roomId: string, playerId: string, pos: 
     if (item.event) {
         throw new Error(`You can't flip an already-flipped item`);
     }
-    const event = createBoardItemFlippedEvent(playerId, Date.now());
-    item.event = event;
+    if (!firstFlip) {
+        // first flip
+        return {
+            playerId: playerId,
+            timestamp: Date.now(),
+            position: pos,
+        };
+    }
+
+    if (firstFlip.playerId !== playerId) {
+        throw new Error(`You can't flip an item with a different player`);
+    }
+
+    const firstItem = getBoardItem(board, firstFlip.position);
+    const secondItem = getBoardItem(board, pos);
+
+    const event = {
+        playerId: playerId,
+        timestamp: Date.now(),
+        position1: firstFlip.position,
+        position2: pos,
+        isPair: firstItem == secondItem,
+    }
+
+    firstItem.event = event;
+    secondItem.event = event;
+
+    return event;
 }
