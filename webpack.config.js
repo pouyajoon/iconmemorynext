@@ -57,6 +57,7 @@ module.exports = {
     output: {
         filename: 'bundle.js',
         path: path.resolve(__dirname, 'dist/front/'),
+        publicPath: "/"
     },
     plugins: [
         new HtmlWebpackPlugin({ template: 'src/front/templates/index.html' }),
