@@ -9,6 +9,7 @@ export function Application() {
             <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/a" element={<A />} />
+                <Route path="/a/a" element={<A />} />
                 <Route path="/rooms/:id" element={<Room />} />
                 <Route path="*" element={<Misc />} />
             </Routes>

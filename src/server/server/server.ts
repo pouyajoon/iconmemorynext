@@ -32,8 +32,8 @@ export function expressServer() {
     if (process.env.NODE_ENV === 'production') {
         app.use(enforce.HTTPS({ trustProtoHeader: true }));
     }
-    // const port = process.env.PORT || 443;
-    const port = 80;
+    const port = process.env.PORT || 80;
+    // const port = 80;
     console.log("SETUP SERVER ON".blue, port, process.env.NODE_ENV, process.env.JUP_ENV);
     // const server = getServer(app);
     const server = new Server(app);
@@ -55,6 +55,7 @@ export function expressServer() {
 
     app.get('*', function (req, res) {
         const r = resolve(join('dist/front', 'index.html'));
+        console.log(r);
         res.sendFile(r);
     });
 
