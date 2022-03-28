@@ -34,18 +34,14 @@ function BoardItem(props: { item: IBoardItem }) {
     const { item } = props;
 
     const color = room?.players[item.playerId || '0']?.color;
+    const flipped = item.playerId ? 'flip-card-flipped' : ''
+    const classes = `flip-card ${flipped}`
     return <div style={{
-        cursor: 'pointer',
-        margin: 2,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
         width: itemWidth,
-        color,
-        fontSize: '3rem',
-        fontWeight: 'bold',
-        height: itemWidth, border: '1px solid blue'
+        height: itemWidth,
+        color: color,
     }}
+        className={classes}
         onClick={() => {
             if (!item.event) {
                 // const firstFlip = room?.board.items.find(i => i.event?.playerId === currentPlayerId)?.event || null;
@@ -57,6 +53,22 @@ function BoardItem(props: { item: IBoardItem }) {
                 // }
                 userSocket.emit('/icon/flip', flip)
             }
-        }}
-    >{item.playerId && item.icon}</div>
+        }}>
+        <div className="flip-card-inner">
+            <div className="flip-card-back"
+                style={{
+                    cursor: 'pointer',
+                    margin: 2,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    color,
+                    fontSize: '3rem',
+                    fontWeight: 'bold',
+                    width: itemWidth,
+                    height: itemWidth,
+                }}
+            >{item.icon}</div>
+        </div>
+    </div>
 }
