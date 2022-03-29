@@ -44,7 +44,7 @@ export function Room() {
     }
     if (room.board.close) {
         return <div style={{ width: '100vw', height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <div style={{ width: 400 }}>
+            <div style={{ width: 400, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <h1>END</h1>
                 <PlayersList players={room.players} />
             </div>
