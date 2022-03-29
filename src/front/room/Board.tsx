@@ -53,7 +53,7 @@ function BoardItem(props: { item: IBoardItem }) {
     const svgIcon = getSvgIcon(item.icon)
     return <div style={{
         width: itemWidth,
-        height: itemWidth * 1.3,
+        height: itemWidth,
         margin: itemMargin,
         color: color,
         borderRadius: itemBorderRadius,
