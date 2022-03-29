@@ -35,7 +35,7 @@ function PlayerNameEdit(props: { roomId: string; playerId: string, name: string 
             value={name}
             onChange={(e) => {
                 const newName = e.target.value;
-                localStorage?.setItem("playerName", newName);
+                localStorage?.setItem("player.name", newName);
                 userSocket.emit(
                     "/rooms/players/set-name",
                     roomId,
@@ -56,7 +56,7 @@ function PlayerColorEdit(props: { roomId: string; playerId: string, color: strin
             value={color}
             onChange={(e) => {
                 const newColor = e.target.value;
-                localStorage?.setItem("playerColor", newColor);
+                localStorage?.setItem("player.color", newColor);
                 userSocket.emit(
                     "/rooms/players/set-color",
                     roomId,
@@ -69,9 +69,9 @@ function PlayerColorEdit(props: { roomId: string; playerId: string, color: strin
 }
 
 export function getColorFromLocalStorage() {
-    return localStorage?.getItem("playerColor");
+    return localStorage?.getItem("player.color");
 }
 
 export function getNameFromLocalStorage() {
-    return localStorage?.getItem("playerName");
+    return localStorage?.getItem("player.name");
 }
