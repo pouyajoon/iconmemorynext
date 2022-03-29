@@ -57,12 +57,12 @@ export function createRoom(manager: IRoomManager): IRoom {
 export function addPlayerToRoom(room: IRoom, playerId: string, color: string | null, name: string | null) {
 
     if (!name ||
-        Object.values(room.players).filter(p => p.name === name).length > 0) {
-        name = generatePlayerName(room)
+        Object.values(room.players).filter(p => p.name === name && p.id != playerId).length > 0) {
+        name = generatePlayerName(room, playerId)
     }
 
     if (!color) {
-        color = generatePlayerColor(room);
+        color = generatePlayerColor(room, playerId);
     }
 
     let score = 0

@@ -14,60 +14,55 @@ export function PlayerOptions(props: {
     const { playerId, playerName, playerColor, roomId } = props;
 
     return (
-        <div style={{ color: playerColor }}>
-            <span>
+        <div>
+            <div>
+                Name:&nbsp;
                 <PlayerNameEdit roomId={roomId} playerId={playerId} name={playerName} />
-            </span>
+            </div>
+            <div>
+                Color:&nbsp;
                 <PlayerColorEdit roomId={roomId} playerId={playerId} color={playerColor} />
+            </div>
         </div>
     );
 }
 
 function PlayerNameEdit(props: { roomId: string; playerId: string, name: string }) {
-    const { name: playerName, roomId, playerId } = props;
-    const [name, setName] = useState<string>(playerName);
-
-    useEffect(() => {
-        localStorage?.setItem("playerName", name);
-        userSocket.emit(
-            "/rooms/players/set-name",
-            roomId,
-            playerId,
-            name
-        );
-    }, [name]);
+    const { name, roomId, playerId } = props;
 
     return (
         <input
             value={name}
             onChange={(e) => {
-                setName(e.target.value);
+                const newName = e.target.value;
+                localStorage?.setItem("playerName", newName);
+                userSocket.emit(
+                    "/rooms/players/set-name",
+                    roomId,
+                    playerId,
+                    newName
+                );
             }}
         />
     );
 }
 
 function PlayerColorEdit(props: { roomId: string; playerId: string, color: string }) {
-    const { color: playerColor, roomId, playerId } = props;
-    const [color, setColor] = useState<string>(playerColor);
-
-    useEffect(() => {
-        localStorage?.setItem("playerColor", color);
-        userSocket.emit(
-            "/rooms/players/set-color",
-            roomId,
-            playerId,
-            color
-        );
-    }, [color]);
+    const { color, roomId, playerId } = props;
 
     return (
         <input
             type="color"
-            value={playerColor}
+            value={color}
             onChange={(e) => {
-                console.log(e.target.value);
-                setColor(e.target.value);
+                const newColor = e.target.value;
+                localStorage?.setItem("playerColor", newColor);
+                userSocket.emit(
+                    "/rooms/players/set-color",
+                    roomId,
+                    playerId,
+                    newColor
+                );
             }}
         />
     );

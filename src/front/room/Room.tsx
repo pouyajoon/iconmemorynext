@@ -61,7 +61,6 @@ export function Room() {
     return <div>
         {
             player && <div>
-                Options:
                 <PlayerOptions roomId={roomId} playerId={player.id} playerName={player.name} playerColor={player.color}/>
             </div>
         }

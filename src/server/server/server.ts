@@ -11,8 +11,8 @@ import {
   getRoom,
 } from "./room";
 import { Server } from "http";
-import { flipIcon } from "./board_server";
-import { IFlipIcon, IRoom, IRoomManager, IRoomPlayer } from "./models";
+import { flipIcon } from "./board";
+import { IFlipIcon, IRoom, IRoomManager } from "./models";
 import { ISocketData } from "./socket.models";
 import { broadcastRoom } from "./broadcast";
 import { setPlayerColor, setPlayerName } from "./player";
@@ -56,8 +56,17 @@ function onSocketConnected(
     }
   });
 
-  socket.on("/rooms/players/add", (roomId, playerId, color, name) => addPlayerToRoomSocket(sockets, socket, manager, roomId, playerId, color, name));
-
+  socket.on("/rooms/players/add", (roomId, playerId, color, name) =>
+    addPlayerToRoomSocket(
+      sockets,
+      socket,
+      manager,
+      roomId,
+      playerId,
+      color,
+      name
+    )
+  );
 
   socket.on(
     "/rooms/players/set-name",
@@ -66,7 +75,6 @@ function onSocketConnected(
       setPlayerName(room, playerId, name);
       broadcastRoom(sockets, room);
     }
-
   );
   socket.on(
     "/rooms/players/set-color",
@@ -101,6 +109,7 @@ function addPlayerToRoomSocket(
 ) {
   sockets.set(socket.id, { playerId, roomId, socket });
   const room = getRoom(manager, roomId);
+  console.log("add player to room", playerId, color, name);
   addPlayerToRoom(room, playerId, color, name);
   broadcastRoom(sockets, room);
 }
