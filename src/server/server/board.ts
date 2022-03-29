@@ -33,6 +33,13 @@ function resetBoard(room: IRoom) {
   room.players = players;
 }
 
+function resetGame(room: IRoom, sockets: Map<string, ISocketData>) {
+  setTimeout(() => {
+    resetBoard(room);
+    broadcastRoom(sockets, room);
+  }, 5000);
+}
+
 function checkRoom(room: IRoom, sockets: Map<string, ISocketData>) {
   let updateCount = 0;
   const focus = room.board.items.filter((i) => !i.discover && i.playerId);
@@ -63,41 +70,24 @@ function checkRoom(room: IRoom, sockets: Map<string, ISocketData>) {
       }
     }
   });
-  if (room.board.items.filter((i) => i.discover !== true).length === 0) {
-    console.log("board close");
-    room.board.close = true;
 
-    setTimeout(() => {
-      resetBoard(room);
-      broadcastRoom(sockets, room);
-    }, 5000);
+
+  // console.log('CHECK'.red, room.board.items.length, room.board.items.filter((i) => i.discover === true || i.playerId).length, room.board.items)
+  if (room.board.items.filter((i) => i.discover === true || i.playerId).length === room.board.items.length) {
+    room.board.close = true;
     updateCount += 1;
+    resetGame(room, sockets);
   }
-  // console.log('check'.blue, updateCount);
+
+  if (room.board.items.filter((i) => i.discover !== true).length === 0) {
+    room.board.close = true;
+    updateCount += 1;
+    resetGame(room, sockets);
+  }
   if (updateCount > 0) {
     broadcastRoom(sockets, room);
   }
 
-  // const players = Object.values(room.players);
-  // const hasUpdates = players.filter(player => {
-  //     const playerItemsNotDiscover = room.board.items.filter(i => i.playerId === player.id && !i.discover);
-  //     // const sameIconsNotDiscover = playerItemsNotDiscover.filter(i => i.icon)
-  //     if (playerItemsNotDiscover.length === 2) {
-  //         playerItemsNotDiscover.map(item => {
-  //             room.board.items[item.index].discover = true;
-  //         })
-  //         return true;
-  //     }
-  //     // if (playerItemsNotDiscover.length === 2){
-  //     //     playerItemsNotDiscover.map(item =>{
-  //     //         room.board.items[item.index].discover = true;
-  //     //     })
-  //     //     return room;
-  //     // }
-  // })
-  // if (hasUpdates.length > 0) {
-  //     broadcastRoom(sockets, room);
-  // }
 }
 
 export function flipIcon(

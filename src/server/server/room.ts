@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { IBoard, IBoardItem, IRoom, IRoomManager, IRoomPlayer, ISize } from './models';
 import { generatePlayerColor, generatePlayerName } from './player';
 
-export const DEFAULT_MAP_WIDTH = 8;
+export const DEFAULT_MAP_WIDTH = 4;
 
 export function createRoomManager(): IRoomManager {
     return { rooms: [] };

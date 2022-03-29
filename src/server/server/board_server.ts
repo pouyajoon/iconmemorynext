@@ -3,10 +3,8 @@ import { getBoardItem } from "./board";
 import { broadcastRoom } from "./broadcast";
 import { IBoard, IBoardItem, IBoardItemFlippedEvent, IFlipIcon, IRoom, IRoomManager, IRoomPlayer } from "./models";
 import { ISocketData } from "./socket.models";
-
 import { uniq } from 'loadsh';
 import { createBoard } from "./room";
-
 
 function isItemSafe(item: IBoardItem) {
     const now = Date.now();
