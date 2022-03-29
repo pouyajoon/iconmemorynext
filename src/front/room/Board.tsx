@@ -53,6 +53,7 @@ function BoardItem(props: { item: IBoardItem }) {
         borderRadius: itemBorderRadius,
         borderWidth: itemBorderWidth,
         borderColor: item.playerId ? color : undefined,
+        backgroundColor: item.discover ? color : undefined
     }}
         data-index={item.index}
         className={classes}
@@ -61,9 +62,8 @@ function BoardItem(props: { item: IBoardItem }) {
             console.log('EMIT', flip);
             userSocket.emit('/icon/flip', flip)
         }}>
-        <div className="flip-card-inner">
+        {!item.discover && <div className="flip-card-inner">
             <div className="flip-card-front">
-
             </div>
             <div className="flip-card-back"
                 style={{
@@ -71,6 +71,6 @@ function BoardItem(props: { item: IBoardItem }) {
                     alignItems: 'center',
                 }}
                 dangerouslySetInnerHTML={createMarkup(svgIcon)}></div>
-        </div>
+        </div>}
     </div>
 }
