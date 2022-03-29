@@ -8,7 +8,7 @@ export function createRoomManager(): IRoomManager {
     return { rooms: [] };
 }
 
-function createBoard(width: number): IBoard {
+export function createBoard(width: number): IBoard {
     const size = width * width;
     return {
         size,

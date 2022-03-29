@@ -25,10 +25,8 @@ export function Room() {
         });
     }, [])
 
-    console.log(roomId, room);
     useEffect(() => {
         if (roomId) {
-            console.log('GET', roomId);
             userSocket.emit('/rooms/get', roomId, ((r?: IRoom) => {
                 console.log('ROOM', r);
                 if (!r) {

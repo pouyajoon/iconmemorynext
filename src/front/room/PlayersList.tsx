@@ -7,14 +7,15 @@ import { roomAtom } from "./rooms.recoil";
 
 export function PlayersList(props: { players: Record<string, IRoomPlayer> }) {
     const { players } = props;
-    if (Object.keys(players).length > 0) {
+    const list = Object.values(players).sort((p1, p2) => p2.score - p1.score);
+    if (list.length > 0) {
         return (
             <table width={200}>
                 <tr>
                     <td>Username</td>
                     <td>Score</td>
                 </tr>
-                {Object.values(players).map((player, i) => <PlayerRow key={i} player={player} />)}
+                {list.map((player, i) => <PlayerRow key={i} player={player} />)}
             </table>
         );
     }
@@ -54,9 +55,6 @@ export function getPlayerFromLocalStorage(): IRoomPlayer {
     localStorage?.setItem("playerId", id);
     localStorage?.setItem("playerName", name);
     localStorage?.setItem("playerColor", color);
-
-    // if (!id) {
-    // }
 
     return { ...newPlayer, id, color };
 }

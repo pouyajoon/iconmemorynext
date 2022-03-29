@@ -1,10 +1,11 @@
 import { wait } from "../../front/room/timer";
 import { getBoardItem } from "./board";
 import { broadcastRoom } from "./broadcast";
-import { IBoard, IBoardItem, IBoardItemFlippedEvent, IFlipIcon, IRoom, IRoomManager } from "./models";
+import { IBoard, IBoardItem, IBoardItemFlippedEvent, IFlipIcon, IRoom, IRoomManager, IRoomPlayer } from "./models";
 import { ISocketData } from "./socket.models";
 
 import { uniq } from 'loadsh';
+import { createBoard } from "./room_server";
 
 
 function isItemSafe(item: IBoardItem) {
@@ -13,6 +14,16 @@ function isItemSafe(item: IBoardItem) {
         return (now - item.lastFlipTime) < 1000;
     }
     return true;
+}
+
+function resetBoard(room: IRoom) {
+    const board = createBoard(Math.sqrt(room.board.size));
+    room.board = board;
+    const players: Record<string, IRoomPlayer> = Object.values(room.players).reduce((acc, v) => {
+        acc[v.id] = v;
+        return acc;
+    }, {});
+    room.players = players;
 }
 
 function checkRoom(room: IRoom, sockets: Map<string, ISocketData>) {
@@ -44,6 +55,11 @@ function checkRoom(room: IRoom, sockets: Map<string, ISocketData>) {
     if (room.board.items.filter(i => i.discover !== true).length === 0) {
         console.log('board close');
         room.board.close = true;
+
+        setTimeout(() => {
+            resetBoard(room);
+            broadcastRoom(sockets, room);
+        }, 5000);
         updateCount += 1;
     }
     // console.log('check'.blue, updateCount);
