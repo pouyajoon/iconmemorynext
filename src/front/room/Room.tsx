@@ -5,7 +5,7 @@ import { IRoom, IRoomPlayer } from '../../server/server/models';
 import { createPlayer } from '../../server/server/player_server';
 import { userSocket } from '../application/Application';
 import { Board } from './Board';
-import { getPlayerFromLocalStorage, Player, PlayersList } from './PlayersList';
+import { EditPlayer, getPlayerFromLocalStorage, PlayerRow, PlayersList } from './PlayersList';
 import { roomAtom, useRoomId } from './rooms.recoil';
 
 
@@ -44,11 +44,17 @@ export function Room() {
     if (!room) {
         return <div>no room found</div>;
     }
+    if (room.board.close) {
+        return <div style={{ width: '100vw', height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <div style={{ width: 400 }}>
+                <h1>END</h1>
+                <PlayersList players={room.players} />
+            </div>
+        </div>
+    }
     return <div>
-        {currentPlayer && <Player roomId={room.id} edit={true} player={currentPlayer} />}
-        <hr />
-        <PlayersList players={room.players} />
-        <hr />
+        {currentPlayer && <EditPlayer roomId={room.id} player={currentPlayer} />}
+        <div style={{ position: 'fixed', bottom: 0, left: 0 }}><PlayersList players={room.players} /></div>
         <div style={{
             display: 'flex',
             alignItems: 'center',

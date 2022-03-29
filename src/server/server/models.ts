@@ -5,6 +5,7 @@ export const EVENT_TYPE_SECOND_ITEM_FLIPPED = 'EVENT_TYPE_SECOND_ITEM_FLIPPED'
 export interface IBoard {
     size: number;
     items: IBoardItem[];
+    close: boolean;
 }
 
 export interface IFlipIcon {

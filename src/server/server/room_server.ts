@@ -12,7 +12,8 @@ function createBoard(width: number): IBoard {
     const size = width * width;
     return {
         size,
-        items: createBoardItems(size)
+        items: createBoardItems(size),
+        close: false
     }
 }
 

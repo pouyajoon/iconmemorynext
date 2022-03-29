@@ -11,12 +11,9 @@ export function Rooms() {
         userSocket.emit('/rooms', setRooms)
     }, [])
 
-    console.log(rooms);
     if (rooms && rooms.length > 0) {
-        return <div>
-            <ul>
-                {rooms.map((room, i) => <li key={i}><RoomItem room={room} /></li>)}
-            </ul>
+        return <div >
+            <div style={{ display: 'flex' }}>{rooms.map((room, i) => <RoomItem key={room.id} room={room} />)}</div>
             <hr />
             <CreateRoom setRooms={setRooms} />
         </div>

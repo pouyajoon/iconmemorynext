@@ -9,38 +9,40 @@ export function PlayersList(props: { players: Record<string, IRoomPlayer> }) {
     const { players } = props;
     if (Object.keys(players).length > 0) {
         return (
-            <ul>
-                {Object.values(players).map((player, i) => (
-                    <li key={i}>
-                        <Player edit={false} player={player} />
-                    </li>
-                ))}
-            </ul>
+            <table width={200}>
+                <tr>
+                    <td>Username</td>
+                    <td>Score</td>
+                </tr>
+                {Object.values(players).map((player, i) => <PlayerRow key={i} player={player} />)}
+            </table>
         );
     }
     return null;
 }
 
-export function Player(props: {
+
+export function EditPlayer(props: {
+    player: IRoomPlayer;
+    roomId: string;
+}) {
+    const { player, roomId } = props;
+    return <div>
+        <PlayerNameEdit roomId={roomId} name={player.name} />
+        <PlayerColorEdit roomId={roomId} color={player.color} />
+    </div>
+}
+
+export function PlayerRow(props: {
     player: IRoomPlayer;
     roomId?: string;
-    edit: boolean;
 }) {
-    const { player, edit, roomId } = props;
+    const { player, roomId } = props;
     return (
-        <div style={{ color: player.color }}>
-            <span>
-                {/* {player.id} */}
-                {roomId && edit ? (
-                    <PlayerNameEdit roomId={roomId} name={player.name} />
-                ) : (
-                    player.name
-                )}
-            </span>
-            {edit && roomId && (
-                <PlayerColorEdit roomId={roomId} color={player.color} />
-            )}
-        </div>
+        <tr style={{ color: player.color, borderBottom: '1px solid #efefef' }}>
+            <td style={{ fontSize: 24 }}>{player.name}</td>
+            <td style={{ fontSize: 24 }}>{player.score}</td>
+        </tr>
     );
 }
 export function getPlayerFromLocalStorage(): IRoomPlayer {

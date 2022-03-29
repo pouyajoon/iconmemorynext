@@ -20,12 +20,13 @@ function checkRoom(room: IRoom, sockets: Map<string, ISocketData>) {
     const focus = room.board.items.filter(i => !i.discover && i.playerId)
     focus.map(item => {
         const playerItems = room.board.items.filter(i => i.playerId === item.playerId && !i.discover);
-        console.log('check'.red, item, playerItems, playerItems.map(i => i.lastFlipTime && Date.now() - i.lastFlipTime));
+        // console.log('check'.red, item, playerItems, playerItems.map(i => i.lastFlipTime && Date.now() - i.lastFlipTime));
         const icons = playerItems.map(i => i.icon);
         const hasPair = icons.length === 2 && uniq(icons).length === 1;
         if (hasPair) {
             for (let i = 0; i < playerItems.length; i += 1) {
                 playerItems[i].discover = true;
+                room.players[playerItems[i].playerId || '?'].score += 1;
                 updateCount += 1;
             }
         } else {
@@ -40,7 +41,12 @@ function checkRoom(room: IRoom, sockets: Map<string, ISocketData>) {
             }
         }
     })
-    console.log('check'.blue, updateCount);
+    if (room.board.items.filter(i => i.discover !== true).length === 0) {
+        console.log('board close');
+        room.board.close = true;
+        updateCount += 1;
+    }
+    // console.log('check'.blue, updateCount);
     if (updateCount > 0) {
         broadcastRoom(sockets, room);
     }
@@ -80,8 +86,6 @@ export function flipIcon(manager: IRoomManager, sockets: Map<string, ISocketData
     const board = room.board;
     const item = getBoardItem(board, index);
 
-    console.log('item'.green, item, currentPlayerId);
-
     // escape already discover
     if (item.discover) {
         return;
@@ -92,7 +96,6 @@ export function flipIcon(manager: IRoomManager, sockets: Map<string, ISocketData
     }
 
     const userNotDiscoverItems = board.items.filter(i => i.playerId === currentPlayerId && !i.discover);
-    console.log('userNotDiscoverItems', userNotDiscoverItems);
     if (userNotDiscoverItems.length > 1) {
         return;
     }

@@ -64,6 +64,7 @@ function BoardItem(props: { item: IBoardItem }) {
         }}>
         {!item.discover && <div className="flip-card-inner">
             <div className="flip-card-front">
+                <span style={{ fontSize: '3rem' }}>{item.icon}</span>
             </div>
             <div className="flip-card-back"
                 style={{
