@@ -25,11 +25,16 @@ export function Rooms() {
     </div >;
 }
 
+
+export function emitCreateRoom(setRooms: (rooms: SetStateAction<IRoom[]>) => void) {
+    userSocket.emit('/rooms/add', (room: IRoom) => {
+        setRooms(rooms => ([...(rooms || []), room]))
+    });
+}
+
 function CreateRoom(props: { setRooms: (rooms: SetStateAction<IRoom[]>) => void }) {
     return <button onClick={() => {
-        userSocket.emit('/rooms/add', (room: IRoom) => {
-            props.setRooms(rooms => ([...(rooms || []), room]))
-        });
+
     }}>create room</button>
 
 }

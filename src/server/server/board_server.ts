@@ -60,8 +60,9 @@ function checkRoom(room: IRoom, sockets: Map<string, ISocketData>) {
         }
     })
 
-    if (room.board.items.filter(i => i.discover === true || i.playerId).length === room.board.items.length) {
+    if (room.board.items.filter(i => i.discover === true || i.playerId !== undefined).length === room.board.items.length) {
         gameEndAndRestart(room, sockets);
+        updateCount += 1;
     }
 
 
