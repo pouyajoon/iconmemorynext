@@ -34,8 +34,8 @@ export interface IRoom {
 export interface IRoomPlayer {
     id: string;
     name: string;
-    score: number;
     color: string;
+    score: number;
 }
 
 export interface IRoomManager {

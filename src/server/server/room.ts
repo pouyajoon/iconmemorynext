@@ -1,6 +1,7 @@
 
 import { v4 as uuidv4 } from 'uuid';
 import { IBoard, IBoardItem, IRoom, IRoomManager, IRoomPlayer, ISize } from './models';
+import { generatePlayerColor, generatePlayerName } from './player';
 
 export const DEFAULT_MAP_WIDTH = 4;
 
@@ -53,11 +54,32 @@ export function createRoom(manager: IRoomManager): IRoom {
     return room;
 }
 
-export function joinRoom(manager: IRoomManager, player: IRoomPlayer, roomId: string) {
-    const room = getRoom(manager, roomId)
+export function addPlayerToRoom(room: IRoom, playerId: string, color: string | null, name: string | null) {
+
+    if (!name ||
+        Object.values(room.players).filter(p => p.name === name && p.id != playerId).length > 0) {
+        name = generatePlayerName(room, playerId)
+    }
+
+    if (!color) {
+        color = generatePlayerColor(room, playerId);
+    }
+
+    let score = 0
+    if (room.players[playerId] !== undefined) {
+        score = room.players[playerId].score
+    }
+
+    const player = {
+        id: playerId,
+        name: name,
+        color: color,
+        score: score
+    }
+
     room.players[player.id] = player;
-    return room;
 }
+
 
 function addRoom(manager: IRoomManager, room: IRoom): void {
     manager.rooms.push(room);

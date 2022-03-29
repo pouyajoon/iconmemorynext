@@ -41,7 +41,7 @@ function BoardItem(props: { item: IBoardItem }) {
     const roomId = useRoomId();
     const [room, setRoom] = useRecoilState(roomAtom(roomId));
 
-    const currentPlayerId = localStorage?.getItem('playerId');
+    const currentPlayerId = localStorage?.getItem('player.id');
     if (!roomId || !currentPlayerId) {
         return null;
     }

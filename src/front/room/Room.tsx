@@ -2,20 +2,20 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { atomFamily, useRecoilState } from 'recoil';
 import { IRoom, IRoomPlayer } from '../../server/server/models';
-import { createPlayer } from '../../server/server/player_server';
 import { userSocket } from '../application/Application';
 import { Board } from './Board';
-import { EditPlayer, getPlayerFromLocalStorage, PlayerRow, PlayersList } from './PlayersList';
+import { PlayerRow } from './PlayersList';
+import { getOrGeneratePlayerId } from './RoomPlayer';
+import { getColorFromLocalStorage, getNameFromLocalStorage, PlayerOptions } from './PlayerOptions';
 import { roomAtom, useRoomId } from './rooms.recoil';
+import { PlayersList } from './PlayersList';
 
 
 export function Room() {
     const roomId = useRoomId();
     const [room, setRoom] = useRecoilState(roomAtom(roomId));
     const navigate = useNavigate();
-    const lsPlayer: IRoomPlayer = getPlayerFromLocalStorage();
-
-    const currentPlayer = room?.players[lsPlayer.id] || lsPlayer;
+    const playerId = getOrGeneratePlayerId();
 
     useEffect(() => {
         console.log('subscribe', roomId);
@@ -33,7 +33,13 @@ export function Room() {
                     console.log(`Unknown room ${roomId}. Going to /`);
                     navigate('/');
                 } else {
-                    userSocket.emit('/players/add', currentPlayer, r.id, setRoom)
+                    userSocket.emit(
+                        "/rooms/players/add",
+                        roomId,
+                        playerId,
+                        getColorFromLocalStorage(),
+                        getNameFromLocalStorage()
+                    );
                 }
             }))
         }
@@ -50,8 +56,14 @@ export function Room() {
             </div>
         </div>
     }
+
+    const player = room.players[playerId]
     return <div>
-        {currentPlayer && <EditPlayer roomId={room.id} player={currentPlayer} />}
+        {
+            player && <div>
+                <PlayerOptions roomId={roomId} playerId={player.id} playerName={player.name} playerColor={player.color}/>
+            </div>
+        }
         <div style={{ position: 'fixed', bottom: 0, left: 0 }}><PlayersList players={room.players} /></div>
         <div style={{
             display: 'flex',
