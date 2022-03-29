@@ -12,11 +12,15 @@ export function PlayersList(props: { players: Record<string, IRoomPlayer> }) {
     if (list.length > 0) {
         return (
             <table width={200}>
-                <tr>
-                    <td>Username</td>
-                    <td>Score</td>
-                </tr>
-                {list.map((player, i) => <PlayerRow key={i} player={player} />)}
+                <thead>
+                    <tr>
+                        <td>Username</td>
+                        <td>Score</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    {list.map((player, i) => <PlayerRow key={i} player={player} />)}
+                </tbody>
             </table>
         );
     }

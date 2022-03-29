@@ -4,7 +4,7 @@ import { IBoard, IBoardItem, IFlipIcon, IRoom } from "../../server/server/models
 import { userSocket } from "../application/Application";
 import { roomAtom, useRoomId } from "./rooms.recoil";
 import { svgIcons } from "./svgIcons";
-import FlipCard from 'react-flipcard';
+import ReactCardFlip from 'react-card-flip';
 
 
 // const itemWidth = 100;
@@ -12,9 +12,13 @@ import FlipCard from 'react-flipcard';
 // const itemBorderWidth = 2;
 // const itemBorderRadius = 4;
 
-const itemCard: CSSProperties = {
-    width: 100, margin: 5, borderWidth: 2, borderRadius: 4
+const itemCard = {
+    width: 100, height: 100,
+    borderRadius: 4,
+    borderWidth: 6,
+    margin: 4
 }
+// const itemCardMargin = 4;
 
 export function Board(props: { board: IBoard }) {
     const { board } = props;
@@ -27,8 +31,7 @@ export function Board(props: { board: IBoard }) {
     }, [ref])
 
     const width = Math.sqrt(size);
-    const max = width * itemWidth + width * itemBorderRadius + width * 2 * itemBorderWidth + itemMargin * (width + 1) + 10;
-    // console.log('ITEMS', size, width, board, items);
+    const max = width * itemCard.width + width * itemCard.borderRadius + width * 2 * itemCard.borderWidth + itemCard.margin * (width + 1) + 10;
     return <div ref={ref} style={{ display: 'flex', width: max, flexDirection: 'row', flexWrap: 'wrap' }}>
         {items.map((item, i) => <BoardItem item={item} key={i} />)}
     </div>
@@ -55,38 +58,54 @@ function BoardItem(props: { item: IBoardItem }) {
 
     const color = room?.players[item.playerId || '0']?.color;
     const flipped = item.playerId ? 'flip-card-flipped' : ''
-    const classes = `flip-card ${flipped}`
-    const svgIcon = getSvgIcon(item.icon)
-    return <FlipCard
-        flipped={item.playerId}
-        style={{
+    // const classes = `flip-card ${flipped}`
+    const svgIcon = getSvgIcon(item.icon);
+
+    if (item.discover) {
+        return <div style={{
             ...itemCard,
-            // width: itemWidth,
-            // height: itemCard.width * 1.3,
-            // margin: itemMargin,
-            color: color,
-            // borderRadius: itemBorderRadius,
-            // borderWidth: itemBorderWidth,
-            borderColor: item.playerId ? color : undefined,
+            margin: itemCard.margin * 2,
+            borderColor: color,
             backgroundColor: item.discover ? color : undefined
+        }}></div>
+    }
+    return <ReactCardFlip
+        containerStyle={{
+            ...itemCard,
+            borderStyle: 'solid',
+            borderColor: item.playerId ? color : '#efefef'
         }}
-        data-index={item.index}
-        className={classes}
-        onClick={() => {
-            const flip: IFlipIcon = { roomId, itemId: item.index, currentPlayerId: currentPlayerId };
-            console.log('EMIT', flip);
-            userSocket.emit('/icon/flip', flip)
-        }}>
-        {!item.discover && <div className="flip-card-inner">
-            <div className="flip-card-front">
-                <span style={{ fontSize: '3rem' }}></span>
-            </div>
-            <div className="flip-card-back"
+        isFlipped={item.playerId !== undefined ? true : false}
+    // data-index={item.index}
+    // className={classes}
+
+    >
+        {/* className="flip-card-inner" */}
+        <div className="flip-card-front"
+            style={{
+                // ...itemCard, color: color,
+                // borderColor: item.playerId ? color : undefined
+            }}
+            onClick={() => {
+                const flip: IFlipIcon = { roomId, itemId: item.index, currentPlayerId: currentPlayerId };
+                console.log('EMIT', flip);
+                userSocket.emit('/icon/flip', flip)
+            }}>
+        </div>
+        <div>
+            {item.discover ? <div style={{
+                // // ...itemCard,
+                // // margin: itemCard.margin * 2,
+                // borderColor: color,
+                backgroundColor: item.discover ? color : undefined
+            }}></div> : <div
                 style={{
                     display: 'flex',
                     alignItems: 'center',
                 }}
-                dangerouslySetInnerHTML={createMarkup(svgIcon)}></div>
-        </div>}
-    </div>
+                dangerouslySetInnerHTML={createMarkup(svgIcon)} />}
+
+        </div>
+        {/* {!item.discover ? : <div />} */}
+    </ReactCardFlip >
 }
