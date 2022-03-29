@@ -8,7 +8,7 @@ const boxSize = 32;
 export function RoomItem(props: { room: IRoom }) {
     const { room } = props;
     return <Link to={`/rooms/${room.id}`} >
-        <div style={{ margin: 16, border: '1px solid #333', width: 240, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', }}>
+        <div style={{ margin: 16, border: '1px solid #333', width: 300, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', }}>
             <div>
                 <h3 style={{ textAlign: 'center' }}>{Object.keys(room.players).length} players</h3>
             </div>

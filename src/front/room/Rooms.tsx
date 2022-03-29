@@ -13,7 +13,7 @@ export function Rooms() {
 
     if (rooms && rooms.length > 0) {
         return <div >
-            <div style={{ display: 'flex' }}>{rooms.map((room, i) => <RoomItem key={room.id} room={room} />)}</div>
+            <div style={{ display: 'flex', flexWrap: 'wrap' }}>{rooms.map((room, i) => <RoomItem key={room.id} room={room} />)}</div>
             <hr />
             <CreateRoom setRooms={setRooms} />
         </div>
@@ -33,8 +33,6 @@ export function emitCreateRoom(setRooms: (rooms: SetStateAction<IRoom[]>) => voi
 }
 
 function CreateRoom(props: { setRooms: (rooms: SetStateAction<IRoom[]>) => void }) {
-    return <button onClick={() => {
-
-    }}>create room</button>
+    return <button onClick={() => emitCreateRoom(props.setRooms)}>create room</button>
 
 }
