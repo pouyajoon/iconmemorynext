@@ -1,11 +1,11 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import { IBoard, IBoardItem, IFlipIcon, IRoom } from "../../server/server/models";
 import { userSocket } from "../application/Application";
 import { roomAtom, useRoomId } from "./rooms.recoil";
 import { svgIcons } from "./svgIcons";
 
-const itemWidth = 60;
+const itemWidth = 100;
 const itemMargin = 5;
 const itemBorderWidth = 2;
 const itemBorderRadius = 4;
@@ -13,11 +13,17 @@ const itemBorderRadius = 4;
 export function Board(props: { board: IBoard }) {
     const { board } = props;
     const { items, size } = board;
+    const ref = useRef<HTMLDivElement | null>(null);
+
+    useEffect(() => {
+        const dom = ref.current?.getBoundingClientRect();
+        console.log('DOM', dom);
+    }, [ref])
 
     const width = Math.sqrt(size);
     const max = width * itemWidth + width * itemBorderRadius + width * 2 * itemBorderWidth + itemMargin * (width + 1);
     // console.log('ITEMS', size, width, board, items);
-    return <div style={{ display: 'flex', width: max, flexDirection: 'row', flexWrap: 'wrap' }}>
+    return <div ref={ref} style={{ display: 'flex', width: max, flexDirection: 'row', flexWrap: 'wrap' }}>
         {items.map((item, i) => <BoardItem item={item} key={i} />)}
     </div>
 }

@@ -26,6 +26,13 @@ function resetBoard(room: IRoom) {
     room.players = players;
 }
 
+function gameEndAndRestart(room: IRoom, sockets: Map<string, ISocketData>, ms?: number) {
+    setTimeout(() => {
+        resetBoard(room);
+        broadcastRoom(sockets, room);
+    }, ms || 5000);
+}
+
 function checkRoom(room: IRoom, sockets: Map<string, ISocketData>) {
     let updateCount = 0;
     const focus = room.board.items.filter(i => !i.discover && i.playerId)
@@ -52,14 +59,17 @@ function checkRoom(room: IRoom, sockets: Map<string, ISocketData>) {
             }
         }
     })
+
+    if (room.board.items.filter(i => i.discover === true || i.playerId).length === room.board.items.length) {
+        gameEndAndRestart(room, sockets);
+    }
+
+
     if (room.board.items.filter(i => i.discover !== true).length === 0) {
         console.log('board close');
         room.board.close = true;
 
-        setTimeout(() => {
-            resetBoard(room);
-            broadcastRoom(sockets, room);
-        }, 5000);
+        gameEndAndRestart(room, sockets);
         updateCount += 1;
     }
     // console.log('check'.blue, updateCount);
