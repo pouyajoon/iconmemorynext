@@ -71,8 +71,6 @@ function checkRoom(room: IRoom, sockets: Map<string, ISocketData>) {
     }
   });
 
-
-  // console.log('CHECK'.red, room.board.items.length, room.board.items.filter((i) => i.discover === true || i.playerId).length, room.board.items)
   if (room.board.items.filter((i) => i.discover === true || i.playerId).length === room.board.items.length) {
     room.board.close = true;
     updateCount += 1;

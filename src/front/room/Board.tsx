@@ -1,14 +1,20 @@
-import React, { useEffect, useRef } from "react";
+import React, { CSSProperties, useEffect, useRef } from "react";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import { IBoard, IBoardItem, IFlipIcon, IRoom } from "../../server/server/models";
 import { userSocket } from "../application/Application";
 import { roomAtom, useRoomId } from "./rooms.recoil";
 import { svgIcons } from "./svgIcons";
+import FlipCard from 'react-flipcard';
 
-const itemWidth = 100;
-const itemMargin = 5;
-const itemBorderWidth = 2;
-const itemBorderRadius = 4;
+
+// const itemWidth = 100;
+// const itemMargin = 5;
+// const itemBorderWidth = 2;
+// const itemBorderRadius = 4;
+
+const itemCard: CSSProperties = {
+    width: 100, margin: 5, borderWidth: 2, borderRadius: 4
+}
 
 export function Board(props: { board: IBoard }) {
     const { board } = props;
@@ -51,16 +57,19 @@ function BoardItem(props: { item: IBoardItem }) {
     const flipped = item.playerId ? 'flip-card-flipped' : ''
     const classes = `flip-card ${flipped}`
     const svgIcon = getSvgIcon(item.icon)
-    return <div style={{
-        width: itemWidth,
-        height: itemWidth * 1.3,
-        margin: itemMargin,
-        color: color,
-        borderRadius: itemBorderRadius,
-        borderWidth: itemBorderWidth,
-        borderColor: item.playerId ? color : undefined,
-        backgroundColor: item.discover ? color : undefined
-    }}
+    return <FlipCard
+        flipped={item.playerId}
+        style={{
+            ...itemCard,
+            // width: itemWidth,
+            // height: itemCard.width * 1.3,
+            // margin: itemMargin,
+            color: color,
+            // borderRadius: itemBorderRadius,
+            // borderWidth: itemBorderWidth,
+            borderColor: item.playerId ? color : undefined,
+            backgroundColor: item.discover ? color : undefined
+        }}
         data-index={item.index}
         className={classes}
         onClick={() => {
