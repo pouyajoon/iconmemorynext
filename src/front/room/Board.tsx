@@ -1,13 +1,9 @@
 import React from "react";
-import { useParams } from "react-router-dom";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import { IBoard, IBoardItem, IFlipIcon, IRoom } from "../../server/server/models";
 import { userSocket } from "../application/Application";
-import { sortBoardItems } from "./board.items";
 import { roomAtom, useRoomId } from "./rooms.recoil";
-import { wait } from "./timer";
 import { svgIcons } from "./svgIcons";
-
 
 const itemWidth = 60;
 const itemMargin = 5;
@@ -75,7 +71,6 @@ function BoardItem(props: { item: IBoardItem }) {
                     alignItems: 'center',
                 }}
                 dangerouslySetInnerHTML={createMarkup(svgIcon)}></div>
-            {/* // >{item.icon}</div> */}
         </div>
     </div>
 }

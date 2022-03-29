@@ -91,30 +91,39 @@ export function flipIcon(manager: IRoomManager, sockets: Map<string, ISocketData
         return;
     }
 
-
-    const userNotDiscoverItems = board.items.filter(i => i.playerId === currentPlayerId && !item.discover);
+    const userNotDiscoverItems = board.items.filter(i => i.playerId === currentPlayerId && !i.discover);
+    console.log('userNotDiscoverItems', userNotDiscoverItems);
     if (userNotDiscoverItems.length > 1) {
         return;
     }
 
-    const otherNotDiscoverItem = board.items.find(i => i.playerId === currentPlayerId && !item.discover && item.index !== i.index);
-    if (!otherNotDiscoverItem) {
-        item.playerId = currentPlayerId;
-        item.lastFlipTime = Date.now();
-        wait(1200).then(() => checkRoom(room, sockets))
-        return room;
-    } else {
-        if (otherNotDiscoverItem) {
-            if (otherNotDiscoverItem.icon === item.icon) {
-                console.log('win');
-            } else {
-                item.playerId = currentPlayerId;
-                item.lastFlipTime = Date.now();
-                wait(1200).then(() => checkRoom(room, sockets))
-                return room;
-            }
-        }
-    }
+    item.playerId = currentPlayerId;
+    item.lastFlipTime = Date.now();
+    wait(1200).then(() => checkRoom(room, sockets))
+    return room;
+
+    // const otherNotDiscoverItem = board.items.find(i => i.playerId === currentPlayerId && !item.discover && item.index !== i.index);
+    // if (!otherNotDiscoverItem) {
+    //     item.playerId = currentPlayerId;
+    //     item.lastFlipTime = Date.now();
+    //     wait(1200).then(() => checkRoom(room, sockets))
+    //     return room;
+    // } else {
+    //     if (otherNotDiscoverItem) {
+    //         item.playerId = currentPlayerId;
+    //         item.lastFlipTime = Date.now();
+    //         wait(1200).then(() => checkRoom(room, sockets))
+    //         return room;
+    //         // if (otherNotDiscoverItem.icon === item.icon) {
+    //         //     console.log('win');
+    //         // } else {
+    //         //     item.playerId = currentPlayerId;
+    //         //     item.lastFlipTime = Date.now();
+    //         //     wait(1200).then(() => checkRoom(room, sockets))
+    //         //     return room;
+    //         // }
+    //     }
+}
 
     // // can only have 1 other not discover item
     // if (!otherNotDiscoverItem) {
