@@ -5,6 +5,7 @@ import { IBoard, IBoardItem, IBoardItemFlippedEvent, IFlipIcon, IRoom, IRoomMana
 import { ISocketData } from "./socket.models";
 
 import { uniq } from 'loadsh';
+import { createBoard } from "./room";
 
 
 function isItemSafe(item: IBoardItem) {
