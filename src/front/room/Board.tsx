@@ -21,7 +21,7 @@ export function Board(props: { board: IBoard }) {
     }, [ref])
 
     const width = Math.sqrt(size);
-    const max = width * itemWidth + width * itemBorderRadius + width * 2 * itemBorderWidth + itemMargin * (width + 1);
+    const max = width * itemWidth + width * itemBorderRadius + width * 2 * itemBorderWidth + itemMargin * (width + 1) + 10;
     // console.log('ITEMS', size, width, board, items);
     return <div ref={ref} style={{ display: 'flex', width: max, flexDirection: 'row', flexWrap: 'wrap' }}>
         {items.map((item, i) => <BoardItem item={item} key={i} />)}
