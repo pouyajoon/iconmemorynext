@@ -1,10 +1,11 @@
-import React, { CSSProperties, useEffect, useRef } from "react";
+import React, { CSSProperties, useEffect, useRef, useState } from "react";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import { IBoard, IBoardItem, IFlipIcon, IRoom } from "../../server/server/models";
 import { userSocket } from "../application/Application";
 import { roomAtom, useRoomId } from "./rooms.recoil";
 import { svgIcons } from "./svgIcons";
 import ReactCardFlip from 'react-card-flip';
+import { useHotkeys } from "react-hotkeys-hook";
 
 
 // const itemWidth = 100;
@@ -49,6 +50,11 @@ function createMarkup(svgIcon: string) {
 function BoardItem(props: { item: IBoardItem }) {
     const roomId = useRoomId();
     const [room, setRoom] = useRecoilState(roomAtom(roomId));
+    const [cheat, setCheat] = useState(false);
+
+    useHotkeys('i+m', (e) => {
+        setCheat(value => !value);
+    }, [])
 
     const currentPlayerId = localStorage?.getItem('player.id');
     if (!roomId || !currentPlayerId) {
@@ -57,55 +63,33 @@ function BoardItem(props: { item: IBoardItem }) {
     const { item } = props;
 
     const color = room?.players[item.playerId || '0']?.color;
-    const flipped = item.playerId ? 'flip-card-flipped' : ''
-    // const classes = `flip-card ${flipped}`
     const svgIcon = getSvgIcon(item.icon);
 
-    if (item.discover) {
-        return <div style={{
-            ...itemCard,
-            margin: itemCard.margin * 2,
-            borderColor: color,
-            backgroundColor: item.discover ? color : undefined
-        }}></div>
-    }
+    const { discover } = item;
     return <ReactCardFlip
         containerStyle={{
             ...itemCard,
             borderStyle: 'solid',
-            borderColor: item.playerId ? color : '#efefef'
+            borderColor: discover ? 'transparent' : item.playerId ? color : '#efefef',
+            backgroundColor: discover ? color : undefined
         }}
         isFlipped={item.playerId !== undefined ? true : false}
-    // data-index={item.index}
-    // className={classes}
-
     >
-        {/* className="flip-card-inner" */}
         <div className="flip-card-front"
-            style={{
-                // ...itemCard, color: color,
-                // borderColor: item.playerId ? color : undefined
-            }}
             onClick={() => {
                 const flip: IFlipIcon = { roomId, itemId: item.index, currentPlayerId: currentPlayerId };
                 console.log('EMIT', flip);
                 userSocket.emit('/icon/flip', flip)
             }}>
+            {cheat && <span style={{ fontSize: '3rem' }}>{item.icon}</span>}
         </div>
         <div>
-            {item.discover ? <div style={{
-                // // ...itemCard,
-                // // margin: itemCard.margin * 2,
-                // borderColor: color,
-                backgroundColor: item.discover ? color : undefined
-            }}></div> : <div
+            {discover ? <div /> : <div
                 style={{
                     display: 'flex',
                     alignItems: 'center',
                 }}
                 dangerouslySetInnerHTML={createMarkup(svgIcon)} />}
-
         </div>
-        {/* {!item.discover ? : <div />} */}
     </ReactCardFlip >
 }
